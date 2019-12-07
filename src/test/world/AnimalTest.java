@@ -16,6 +16,15 @@ class AnimalTest {
             assertTrue(genome[i] >= 0 && genome[i] <= 7);
             assertTrue(genome[i] >= genome[i-1]);
         }
+
+        int[] genesOccurrence = new int[8];
+        for (int i=0; i<32; i++) {
+            genesOccurrence[genome[i]] += 1;
+        }
+
+        for (int i=0; i<8; i++) {
+            assertTrue(genesOccurrence[i] > 0);
+        }
     }
 
     @Test

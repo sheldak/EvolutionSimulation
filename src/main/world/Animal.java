@@ -33,8 +33,19 @@ public class Animal implements IMapElement {
 
     static int[] getRandomGenome() {
         int[] genome = new int[32];
+        int[] genesOccurrence = new int[8];
         for (int i=0; i<32; i++) {
             genome[i] = new Random().nextInt(8);
+            genesOccurrence[genome[i]] += 1;
+        }
+
+        for (int i=0; i<8; i++) {  // to ensure having all types of genes
+            if (genesOccurrence[i] == 0) {
+                int changeIndex = new Random().nextInt(32);
+                while (genesOccurrence[genome[changeIndex]] == 0)
+                    changeIndex += 1;
+                genome[changeIndex] = i;
+            }
         }
 
         Arrays.sort(genome);

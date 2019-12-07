@@ -5,97 +5,114 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WorldMapTest {
-    private WorldMap map = new WorldMap(10, 20, 0.4, 10);
+    private WorldMap map = new WorldMap(4, 8, 0.5, 10);
 
-//    @Test
-//    void runTest() {
-//
-//    }
-//
-//    @Test
-//    void isOccupiedTest() {
-//        GrassField map = new GrassField(1);
-//        Vector2d grassPos = new Vector2d(-1, -1);
-//        for (int i = 0; i < 3; i += 1) {
-//            for (int j = 0; j < 3; j += 1) {
-//                if (map.isOccupied(new Vector2d(i, j)))
-//                    grassPos = new Vector2d(i, j);
-//            }
-//        }
-//
-//        assertTrue(map.isOccupied(grassPos));
-//        Animal animal = new Animal(map, grassPos.x, grassPos.y);
-//        map.place(animal);
-//
-//        for (int i = 0; i < 3; i += 1) {
-//            for (int j = 0; j < 3; j += 1) {
-//                if (map.isOccupied(new Vector2d(i, j)) && map.objectAt(new Vector2d(i, j)) instanceof Grass)
-//                    grassPos = new Vector2d(i, j);
-//            }
-//        }
-//
-//        for (int i = 0; i < 3; i += 1) {
-//            for (int j = 0; j < 3; j += 1) {
-//                if (i == grassPos.x && j == grassPos.y || i == animal.getPosition().x && j == animal.getPosition().y)
-//                    assertTrue(map.isOccupied(new Vector2d(i, j)));
-//                else
-//                    assertFalse(map.isOccupied(new Vector2d(i, j)));
-//            }
-//        }
-//    }
-//
-//    @Test
-//    void objectAtTest() {
-//        GrassField map = new GrassField(1);
-//
-//        Animal animal_0_0 = new Animal(map, 0, 0);
-//        map.place(animal_0_0);
-//
-//        assertEquals(map.objectAt(new Vector2d(0, 0)), animal_0_0);
-//    }
-//
-//    @Test
-//    void placeTest() {
-//        GrassField map = new GrassField(1);
-//        map.place(new Animal(map, 1, 1));
-//
-//        for (int i = 0; i <= 2; i++) {
-//            for (int j = 0; j <= 1; j++) {
-//                if (i != 1 && j != 1)
-//                    assertTrue(map.place(new Animal(map, i, j)));
-//            }
-//        }
-//    }
+    @Test
+    void testIsOccupied() {
+        map.placeInitialAnimals(2, 10, 1);
 
-//    @Test
-//    void consumeGrassTest() {
-//        GrassField map = new GrassField(1);
-//        int grassPosX = -1;
-//        int grassPosY = -1;
-//
-//        for (int i = 0; i < 3; i += 1) {
-//            for (int j = 0; j < 3; j += 1) {
-//                if (map.isOccupied(new Vector2d(i, j))) {
-//                    grassPosX = i;
-//                    grassPosY = j;
-//                }
-//            }
-//        }
-//
-//        assertTrue(map.isOccupied(new Vector2d(grassPosX, grassPosY)));
-//        Animal animal = new Animal(map, grassPosX, grassPosY - 1);
-//        map.place(animal);
-//
-//        assertTrue(map.isOccupied(new Vector2d(grassPosX, grassPosY)));
-//        assertTrue(map.isOccupied(new Vector2d(grassPosX, grassPosY - 1)));
-//
-//        MoveDirection[] directions = new MoveDirection[2];
-//        directions[0] = MoveDirection.FORWARD;
-//        directions[1] = MoveDirection.FORWARD;
-//        map.run(directions);
-//
-//        assertFalse(map.isOccupied(new Vector2d(grassPosX, grassPosY)));
-//    }
-//
+        int counter = 0;
 
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.isOccupied(new Vector2d(i, j))) {
+                    counter += 1;
+                }
+            }
+        }
+        assertEquals(2, counter);
+    }
+
+    @Test
+    void testObjectAt() {
+        map.placeInitialAnimals(2, 0, 0);
+
+        int counter = 0;
+
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.objectAt(new Vector2d(i, j)) instanceof Animal) {
+                    counter += 1;
+                }
+            }
+        }
+        assertEquals(2, counter);
+
+        map.nextDay();
+
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.objectAt(new Vector2d(i, j)) instanceof Grass) {
+                    counter += 1;
+                }
+            }
+        }
+        assertEquals(4, counter);
+    }
+
+    @ Test
+    void testPositionChanged() {
+        map.placeInitialAnimals(1, 10, 1);
+
+        Vector2d oldPosition = new Vector2d(-1, -1);
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.isOccupied(new Vector2d(i, j))) {
+                    oldPosition = ((Animal) map.objectAt(new Vector2d(i, j))).getPosition();
+                }
+            }
+        }
+
+        map.nextDay();
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.isOccupied(new Vector2d(i, j)) && map.objectAt(new Vector2d(i, j)) instanceof Animal) {
+                    assertNotEquals(oldPosition, new Vector2d(i, j));
+                }
+            }
+        }
+    }
+
+    @Test
+    void testNextDay() {
+        map.placeInitialAnimals(3, 0, 0);
+
+        map.nextDay();
+        map.nextDay();
+
+        int counter = 0;
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.isOccupied(new Vector2d(i, j))) {
+                   counter += 1;
+                }
+
+                assertFalse(map.objectAt(new Vector2d(i, j)) instanceof Animal);
+            }
+        }
+        assertEquals(4, counter);
+    }
+
+    @Test
+    void testPlaceGrass() {
+        map.nextDay();
+        map.nextDay();
+        map.nextDay();
+
+        int counterSavannah = 0;
+        int counterJungle = 0;
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<8; j++) {
+                if (map.isOccupied(new Vector2d(i, j))) {
+                    if (i >= 1 && i <= 2 && j >= 2 & j <= 5)
+                        counterJungle += 1;
+                    else
+                        counterSavannah += 1;
+                }
+            }
+        }
+
+        assertEquals(3, counterJungle);
+        assertEquals(3, counterSavannah);
+    }
 }

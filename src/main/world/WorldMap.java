@@ -16,7 +16,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     private Map<Vector2d, IMapElement> elementsMap = new HashMap<>();
     private List<Grass> grasses = new ArrayList<>();
 
-    public WorldMap(int width, int height, double jungleRatio, int plantEnergy) {
+    WorldMap(int width, int height, double jungleRatio, int plantEnergy) {
         this.width = width;
         this.height = height;
 
@@ -62,12 +62,12 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         this.elementsMap.put(newPosition, animal);
     }
 
-    public Vector2d correctDestination(Vector2d destination){
+    Vector2d correctDestination(Vector2d destination){
         return new Vector2d((destination.getX() + this.width) % this.width,
                 (destination.getY() + this.height) % this.height);
     }
 
-    public void nextDay(){
+    void nextDay(){
         this.getRidOfDeadAnimals();
 
         this.run();
@@ -76,13 +76,13 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         this.placeGrassInSavannah();
     }
 
-    public void placeInitialAnimals(int number, int startEnergy, int moveEnergy) {
+    void placeInitialAnimals(int number, int startEnergy, int moveEnergy) {
         for (int i=0; i<number; i++) {
             int animalX = new Random().nextInt(this.width);
             int animalY = new Random().nextInt(this.height);
 
             for (int j = 0; j < this.width * this.height; j++) {
-                if (!isOccupied(new Vector2d(animalX, animalY))) { // when there is other animal on this place
+                if (!isOccupied(new Vector2d(animalX, animalY))) { // when there is no other animal on this place
                     Animal newAnimal = new Animal(this, animalX, animalY, MapDirection.getRandomDirection(),
                             Animal.getRandomGenome(), startEnergy, startEnergy, moveEnergy);
 
@@ -118,11 +118,16 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
 //    }
 
     private void getRidOfDeadAnimals() {
-        for (Animal animal : animals) {
+        List<Animal> animalsToRemove = new ArrayList<>();
+        for (Animal animal : this.animals) {
             if (animal.isDead()) {
-                this.elementsMap.remove(animal);
-                this.animals.remove(animal);
+                animalsToRemove.add(animal);
             }
+        }
+
+        for (Animal animal : animalsToRemove) {
+            this.elementsMap.remove(animal.getPosition());
+            this.animals.remove(animal);
         }
     }
 
@@ -131,7 +136,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         int grassY = this.jungleStart.getY() + new Random().nextInt(this.jungleHeight);
 
         for (int i = 0; i < this.jungleWidth * this.jungleHeight; i++){
-            if (!isOccupied(new Vector2d(grassX, grassY))){ // when there is other object on this place
+            if (!isOccupied(new Vector2d(grassX, grassY))){ // when there is no other object on this place
                 Grass newGrass = new Grass(grassX, grassY);
                 this.elementsMap.put(new Vector2d(grassX, grassY), newGrass);
                 this.grasses.add(newGrass);

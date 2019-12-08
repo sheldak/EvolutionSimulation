@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WorldMapTest {
-    private WorldMap map = new WorldMap(4, 8, 0.5, 10);
+    private WorldMap map = new WorldMap(4, 8, 0.5, 10, 1);
 
     @Test
     void testIsOccupied() {
-        map.placeInitialAnimals(2, 10, 1);
+        map.placeInitialAnimals(2, 10);
 
         int counter = 0;
 
@@ -25,13 +25,13 @@ class WorldMapTest {
 
     @Test
     void testObjectAt() {
-        map.placeInitialAnimals(2, 0, 0);
+        map.placeInitialAnimals(2, 0);
 
         int counter = 0;
 
         for (int i=0; i<4; i++) {
             for (int j=0; j<8; j++) {
-                if (map.objectAt(new Vector2d(i, j)) instanceof Animal) {
+                if (!map.objectsAt(new Vector2d(i, j)).isEmpty()) {
                     counter += 1;
                 }
             }
@@ -42,7 +42,7 @@ class WorldMapTest {
 
         for (int i=0; i<4; i++) {
             for (int j=0; j<8; j++) {
-                if (map.objectAt(new Vector2d(i, j)) instanceof Grass) {
+                if (!map.objectsAt(new Vector2d(i, j)).isEmpty()) {
                     counter += 1;
                 }
             }
@@ -51,14 +51,14 @@ class WorldMapTest {
     }
 
     @ Test
-    void testPositionChanged() {
-        map.placeInitialAnimals(1, 10, 1);
+    void testChangePosition() {
+        map.placeInitialAnimals(1, 10);
 
         Vector2d oldPosition = new Vector2d(-1, -1);
         for (int i=0; i<4; i++) {
             for (int j=0; j<8; j++) {
                 if (map.isOccupied(new Vector2d(i, j))) {
-                    oldPosition = ((Animal) map.objectAt(new Vector2d(i, j))).getPosition();
+                    oldPosition = ((Animal) map.objectsAt(new Vector2d(i, j)).toArray()[0]).getPosition();
                 }
             }
         }
@@ -66,7 +66,8 @@ class WorldMapTest {
         map.nextDay();
         for (int i=0; i<4; i++) {
             for (int j=0; j<8; j++) {
-                if (map.isOccupied(new Vector2d(i, j)) && map.objectAt(new Vector2d(i, j)) instanceof Animal) {
+                if (map.isOccupied(new Vector2d(i, j)) &&
+                        map.objectsAt(new Vector2d(i, j)).toArray()[0] instanceof Animal) {
                     assertNotEquals(oldPosition, new Vector2d(i, j));
                 }
             }
@@ -75,7 +76,7 @@ class WorldMapTest {
 
     @Test
     void testNextDay() {
-        map.placeInitialAnimals(3, 0, 0);
+        map.placeInitialAnimals(3, 0);
 
         map.nextDay();
         map.nextDay();
@@ -85,9 +86,9 @@ class WorldMapTest {
             for (int j=0; j<8; j++) {
                 if (map.isOccupied(new Vector2d(i, j))) {
                    counter += 1;
-                }
 
-                assertFalse(map.objectAt(new Vector2d(i, j)) instanceof Animal);
+                   assertFalse(map.objectsAt(new Vector2d(i, j)).toArray()[0] instanceof Animal);
+                }
             }
         }
         assertEquals(4, counter);

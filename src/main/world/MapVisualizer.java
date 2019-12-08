@@ -1,5 +1,8 @@
 package world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The map visualizer converts the {@link IWorldMap} map into a string
  * representation.
@@ -10,13 +13,13 @@ public class MapVisualizer {
     private static final String EMPTY_CELL = "   ";
     private static final String FRAME_SEGMENT = "--";
     private static final String CELL_SEGMENT = "|";
-    private IWorldMap map;
+    private WorldMap map;
 
     /**
      * Initializes the MapVisualizer with an instance of map to visualize.
      * @param map
      */
-    public MapVisualizer(IWorldMap map) {
+    public MapVisualizer(WorldMap map) {
         this.map = map;
     }
 
@@ -72,7 +75,16 @@ public class MapVisualizer {
     private String drawObject(Vector2d currentPosition) {
         String result = null;
         if (this.map.isOccupied(currentPosition)) {
-            Object object = this.map.objectAt(currentPosition);
+            Object object;
+
+            List<Object> objectsHere = this.map.objectsAt(currentPosition);
+            if (objectsHere.isEmpty())
+                object = null;
+            else {
+                Object[] objectsArray = objectsHere.toArray();
+                object = objectsArray[0];
+            }
+
             if (object != null) {
                 result = object.toString();
             } else {

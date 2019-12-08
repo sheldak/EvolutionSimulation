@@ -6,10 +6,9 @@ public class World {
     public static void main(String[] args){
         JSONReader jsonReader = new JSONReader("src/res/parameters.json");
         WorldMap map = new WorldMap(jsonReader.getWidth(), jsonReader.getHeight(), jsonReader.getJungleRatio(),
-                jsonReader.getPlantEnergy());
+                jsonReader.getPlantEnergy(), jsonReader.getMoveEnergy());
 
-        map.placeInitialAnimals(jsonReader.getInitialNumberOfAnimals(),
-                jsonReader.getStartEnergy(), jsonReader.getMoveEnergy());
+        map.placeInitialAnimals(jsonReader.getInitialNumberOfAnimals(), jsonReader.getStartEnergy());
 
         out.println(map.toString());
         for (int i=0; i<31; i++){

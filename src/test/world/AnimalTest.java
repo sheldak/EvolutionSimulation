@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
-    private WorldMap map = new WorldMap(10, 20, 0.4, 10);
+    private WorldMap map = new WorldMap(10, 20, 0.4, 10, 1);
 
     @Test
     void testGetRandomGenome() {
@@ -30,21 +30,21 @@ class AnimalTest {
     @Test
     void testToString(){
         Animal animal_N = new Animal (map, 1, 1, MapDirection.NORTH, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_NE = new Animal (map, 1, 1, MapDirection.NORTHEAST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_E = new Animal (map, 1, 1, MapDirection.EAST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_SE = new Animal (map, 1, 1, MapDirection.SOUTHEAST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_S = new Animal (map, 1, 1, MapDirection.SOUTH, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_SW = new Animal (map, 1, 1, MapDirection.SOUTHWEST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_W = new Animal (map, 1, 1, MapDirection.WEST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
         Animal animal_NW = new Animal (map, 1, 1, MapDirection.NORTHWEST, Animal.getRandomGenome(),
-                30, 30, 1);
+                30, 30);
 
         assertEquals(" N ", animal_N.toString());
         assertEquals("N E", animal_NE.toString());
@@ -62,7 +62,7 @@ class AnimalTest {
         for (int i=0; i<32; i++) genome[i] = 1;
 
         Animal animal = new Animal (map, 0, 18, MapDirection.WEST, genome,
-                6, 6, 2);
+                3, 3);
         assertEquals(new Vector2d(0, 18), animal.getPosition());
         assertFalse(animal.isDead());
 

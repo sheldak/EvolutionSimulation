@@ -8,14 +8,14 @@ package world;
  *
  */
 public interface IWorldMap {
-    /**
-     * Indicate if any object can move to the given position.
-     *
-     * @param position
-     *            The position checked for the movement possibility.
-     * @return True if the object can move to that position.
-     */
-    boolean canMoveTo(Vector2d position);
+//    /**
+//     * Indicate if any object can move to the given position.
+//     *
+//     * @param position
+//     *            The position checked for the movement possibility.
+//     * @return True if the object can move to that position.
+//     */
+//    boolean canMoveTo(Vector2d position);
 
 //    /**
 //     * Place a animal on the map.
@@ -49,5 +49,5 @@ public interface IWorldMap {
      *            The position of the object.
      * @return Object or null if the position is not occupied.
      */
-    Object objectAt(Vector2d position);
+    Object objectsAt(Vector2d position);
 }

@@ -1,4 +1,6 @@
-package world;
+package map;
+
+import features.Vector2d;
 
 /**
  * The interface responsible for interacting with the map of the world.

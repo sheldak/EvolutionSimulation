@@ -1,6 +1,8 @@
-package world;
+package mapElements;
 
 import org.junit.jupiter.api.Test;
+import features.Vector2d;
+import mapElements.Grass;
 
 import static org.junit.jupiter.api.Assertions.*;
 

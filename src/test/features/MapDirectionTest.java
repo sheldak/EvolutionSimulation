@@ -1,6 +1,8 @@
-package world;
+package features;
 
 import org.junit.jupiter.api.Test;
+import features.MapDirection;
+import features.Vector2d;
 
 import static org.junit.jupiter.api.Assertions.*;
 

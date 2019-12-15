@@ -1,4 +1,4 @@
-package world;
+package utilities;
 
 import org.junit.jupiter.api.Test;
 

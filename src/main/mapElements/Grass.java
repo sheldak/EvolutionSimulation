@@ -1,9 +1,11 @@
-package world;
+package mapElements;
+
+import features.Vector2d;
 
 public class Grass implements IMapElement {
     private Vector2d position;
 
-    Grass(int x, int y){
+    public Grass(int x, int y){
         this.position = new Vector2d(x, y);
     }
 

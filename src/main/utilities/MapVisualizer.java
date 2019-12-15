@@ -1,6 +1,9 @@
-package world;
+package utilities;
 
-import java.util.ArrayList;
+import features.Vector2d;
+import map.IWorldMap;
+import map.WorldMap;
+
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package world;
+package features;
 
 public class Vector2d {
     private final int x;
@@ -19,20 +19,20 @@ public class Vector2d {
         hash += this.y * 17;
         return hash;
     }
+//
+//    public boolean equals(Vector2d other) {
+//        return this.hashCode() == other.hashCode();
+//    }
 
-    boolean equals(Vector2d other) {
-        return this.hashCode() == other.hashCode();
-    }
-
-    boolean precedes(Vector2d other){
+    public boolean precedes(Vector2d other){
         return (this.x <= other.x && this.y <= other.y);
     }
 
-    boolean follows(Vector2d other){
+    public boolean follows(Vector2d other){
         return (this.x >= other.x && this.y >= other.y);
     }
 
-    Vector2d upperRight(Vector2d other){
+    public Vector2d upperRight(Vector2d other){
         int up;
         int right;
 
@@ -42,7 +42,7 @@ public class Vector2d {
         return new Vector2d(right, up);
     }
 
-    Vector2d lowerLeft(Vector2d other){
+    public Vector2d lowerLeft(Vector2d other){
         int down;
         int left;
 
@@ -52,11 +52,11 @@ public class Vector2d {
         return new Vector2d(left, down);
     }
 
-    Vector2d add(Vector2d other){
+    public Vector2d add(Vector2d other){
         return new Vector2d(this.x + other.x, this.y + other.y);
     }
 
-    Vector2d subtract(Vector2d other){
+    public Vector2d subtract(Vector2d other){
         return new Vector2d(this.x - other.x, this.y - other.y);
     }
 
@@ -70,15 +70,15 @@ public class Vector2d {
         return (this.x == that.x && this.y == that.y);
     }
 
-    Vector2d opposite(){
+    public Vector2d opposite(){
         return new Vector2d(-this.x, -this.y);
     }
 
-    int getX(){
+    public int getX(){
         return this.x;
     }
 
-    int getY(){
+    public int getY(){
         return this.y;
     }
 }

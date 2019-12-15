@@ -1,8 +1,8 @@
-package world;
+package features;
 
 import java.util.Random;
 
-enum MapDirection {
+public enum MapDirection {
     NORTH,
     NORTHEAST,
     EAST,

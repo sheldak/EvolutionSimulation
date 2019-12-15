@@ -1,4 +1,4 @@
-package world;
+package utilities;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -7,7 +7,7 @@ import java.io.FileReader;
 
 import static java.lang.System.out;
 
-class JSONReader {
+public class JSONReader {
     private int width;
     private int height;
     private double jungleRatio;
@@ -18,7 +18,7 @@ class JSONReader {
 
     private int initialNumberOfAnimals;
 
-    JSONReader(String path) {
+    public JSONReader(String path) {
         try {
             Object object = new JSONParser().parse(new FileReader(path));
             JSONObject jsonObject = (JSONObject) object;
@@ -38,32 +38,31 @@ class JSONReader {
         }
     }
 
-    int getWidth() {
+    public int getWidth() {
         return this.width;
     }
 
-    int getHeight() {
+    public int getHeight() {
         return this.height;
     }
 
-    double getJungleRatio() {
+    public double getJungleRatio() {
         return this.jungleRatio;
     }
 
-    int getStartEnergy() {
+    public int getStartEnergy() {
         return this.startEnergy;
     }
 
-    int getMoveEnergy() {
+    public int getMoveEnergy() {
         return this.moveEnergy;
     }
 
-    int getPlantEnergy() {
+    public int getPlantEnergy() {
         return this.plantEnergy;
     }
 
-    int getInitialNumberOfAnimals() {
+    public int getInitialNumberOfAnimals() {
         return this.initialNumberOfAnimals;
     }
-
 }

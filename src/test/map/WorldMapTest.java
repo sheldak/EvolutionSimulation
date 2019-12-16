@@ -35,10 +35,13 @@ class WorldMapTest {
 
     @Test
     void testRun() {
-        int[] genomeArrayA =
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int[] genomeArrayB =
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        int[] genomeArrayA = new int[32];
+        int[] genomeArrayB = new int[32];
+
+        for(int i=0; i<32; i++) {
+            genomeArrayA[i] = 0;
+            genomeArrayB[i] = 2;
+        }
 
         Animal animal_0_0 = new Animal(map, 0, 0, MapDirection.NORTHEAST,
                 new Genome(genomeArrayA), 30, 30);
@@ -171,6 +174,20 @@ class WorldMapTest {
     }
 
     @Test
+    void testRemoveAnimal() {
+        map.addAnimal(animal_1_1);
+        map.startWorld(worldBuilder, 0.5 ,12, 0);
+        assertEquals(13, map.getNumberOfAnimals());
+
+        map.removeAnimal(animal_1_1);
+        assertEquals(12, map.getNumberOfAnimals());
+
+        map.nextDay();
+        assertEquals(0, map.getNumberOfAnimals());
+        assertEquals(2, map.getAmountOfGrass());
+    }
+
+    @Test
     void testAddGrass() {
         map.addGrass(grass_2_2);
 
@@ -190,6 +207,72 @@ class WorldMapTest {
 
         map.startWorld(worldBuilder, 0.5, 5, 10);
         assertEquals(6, map.getNumberOfAnimals());
+    }
+
+    @Test
+    void testGetAmountOfGrass() {
+        map.addGrass(grass_2_2);
+
+        map.startWorld(worldBuilder, 0.5, 0, 10);
+
+        map.nextDay();
+        map.nextDay();
+        map.nextDay();
+
+        assertEquals(7, map.getAmountOfGrass());
+    }
+
+    @Test
+    void testGetAverageAnimalsEnergy() {
+        int[] genomeArray = new int[32];
+        for (int i=0; i<32; i++) genomeArray[i] = 0;
+        Genome genome = new Genome(genomeArray);
+
+        Animal animal_2_1 = new Animal(map, 2, 1, MapDirection.NORTH,genome, 40, 100);
+
+        Animal animal_2_3 = new Animal(map, 2, 1, MapDirection.SOUTH, genome, 30, 100);
+
+        Animal animal_0_0 = new Animal(map, 0, 0, MapDirection.SOUTH, genome, 80, 100);
+
+        map.startWorld(worldBuilder, 0.5, 0, 0);
+
+        map.addAnimal(animal_2_1);
+        map.addAnimal(animal_2_3);
+        map.addAnimal(animal_0_0);
+        map.addGrass(grass_2_2);
+
+        assertEquals(50, map.getAverageAnimalsEnergy());
+
+        map.nextDay();
+
+        assertEquals(50, map.getAverageAnimalsEnergy());
+    }
+
+    @Test
+    void testGetAverageAnimalsLifetime() {
+        Animal animal_0_0 = new Animal(map, 0, 0, MapDirection.NORTH, new Genome(),  100, 100);
+        Animal animal_1_1 = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 100, 100);
+        Animal animal_3_3 = new Animal(map, 3, 3, MapDirection.SOUTH, new Genome(), 100, 100);
+
+        map.startWorld(worldBuilder, 0.5, 0, 0);
+        map.addAnimal(animal_0_0);
+        map.addAnimal(animal_1_1);
+        map.addAnimal(animal_3_3);
+
+        map.nextDay();
+
+        map.removeAnimal(animal_0_0);
+        assertEquals(1, map.getAverageAnimalsLifetime());
+
+        map.nextDay();
+
+        map.removeAnimal(animal_1_1);
+        assertEquals(1.5, map.getAverageAnimalsLifetime());
+
+        map.nextDay();
+
+        map.removeAnimal(animal_3_3);
+        assertEquals(2, map.getAverageAnimalsLifetime());
     }
 
     @Test

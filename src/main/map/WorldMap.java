@@ -16,7 +16,12 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     private WorldBuilder worldBuilder;
 
     private List<Animal> animals = new ArrayList<>();
+    private List<Grass> grasses = new ArrayList<>();
     private Map<Vector2d, List<Object>> elementsMap = new HashMap<>();
+
+    private List<Animal> deadAnimals = new ArrayList<>();
+
+    private int currentDay;
 
     public WorldMap(int width, int height, int plantEnergy, int moveEnergy) {
         this.width = width;
@@ -39,6 +44,8 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         worldBuilder.passMapSize(this.width, this.height);
         worldBuilder.placeJungle(jungleRatio);
         worldBuilder.placeInitialAnimals(numberOfAnimals, startEnergy);
+
+        this.currentDay = 0;
     }
 
     @Override
@@ -79,6 +86,11 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     }
 
     public void nextDay(){
+        this.currentDay += 1;
+
+        for(Animal animal : this.animals)
+            animal.makeOlder();
+
         this.getRidOfDeadAnimals();
 
         this.run();
@@ -93,12 +105,41 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         this.elementsMap.get(animal.getPosition()).add(animal);
     }
 
+    public void removeAnimal(Animal animal) {
+        animal.kill(currentDay);
+
+        this.elementsMap.get(animal.getPosition()).remove(animal);
+        this.animals.remove(animal);
+
+        this.deadAnimals.add(animal);
+    }
+
     public void addGrass(Grass grass) {
+        this.grasses.add(grass);
         this.elementsMap.get(grass.getPosition()).add(grass);
     }
 
+    // statistics
     public int getNumberOfAnimals() {
         return this.animals.size();
+    }
+
+    public int getAmountOfGrass() {
+        return this.grasses.size();
+    }
+
+    public double getAverageAnimalsEnergy() {
+        int sum = 0;
+        for (Animal animal : this.animals)
+            sum += animal.getEnergy();
+        return (double) sum / (double) this.animals.size();
+    }
+
+    public double getAverageAnimalsLifetime() {
+        int sum = 0;
+        for (Animal deadAnimal : this.deadAnimals)
+            sum += deadAnimal.getAge();
+        return (double) sum / (double) this.deadAnimals.size();
     }
 
     private void checkGrassConsumption(Set <Vector2d> positions) {
@@ -135,6 +176,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
                     for (Animal animal : eaters)
                         animal.consumeGrass(this.plantEnergy/eaters.size());
 
+                    this.grasses.remove(grass);
                     this.elementsMap.get(position).remove(grass);
                 }
             }
@@ -177,8 +219,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         }
 
         for (Animal animal : animalsToRemove) {
-            this.elementsMap.get(animal.getPosition()).remove(animal);
-            this.animals.remove(animal);
+            this.removeAnimal(animal);
         }
     }
 

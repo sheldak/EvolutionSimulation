@@ -1,16 +1,17 @@
 package mapElements;
 
 import features.Vector2d;
+import map.WorldBuilder;
 import org.junit.jupiter.api.Test;
 import features.MapDirection;
 import map.WorldMap;
-import mapElements.Animal;
 import features.Genome;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnimalTest {
-    private WorldMap map = new WorldMap(10, 20, 10, 1);
+    private WorldMap map = new WorldMap(10, 20, 30, 10);
+    WorldBuilder worldBuilder = new WorldBuilder(map);
 
     @Test
     void testToString(){
@@ -46,7 +47,7 @@ class AnimalTest {
         int[] genome = new int[32];
         for (int i=0; i<32; i++) genome[i] = 1;
 
-        Animal animal = new Animal (map, 0, 18, MapDirection.WEST, new Genome(genome), 3, 3);
+        Animal animal = new Animal (map, 0, 18, MapDirection.WEST, new Genome(genome), 30, 30);
         assertEquals(new Vector2d(0, 18), animal.getPosition());
         assertFalse(animal.isDead());
 
@@ -74,5 +75,60 @@ class AnimalTest {
         Animal babyAnimal = animalA.reproduce(animalB, new Vector2d(2, 2));
 
         assertEquals(7, babyAnimal.getEnergy());
+    }
+
+    @Test
+    void testGetAgeAndGetDeathTime() {
+        Animal animal_1_1 = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 10, 20);
+        map.startWorld(worldBuilder, 0.5, 0, 0);
+
+        map.addAnimal(animal_1_1);
+        assertEquals(0, animal_1_1.getAge());
+
+        map.nextDay();
+        assertEquals(1, animal_1_1.getAge());
+
+        map.nextDay();
+        assertEquals(2, animal_1_1.getDeathTime());
+        assertEquals(2, animal_1_1.getAge());
+    }
+
+    @Test
+    void testGetNumberOfChildrenAndOffspring() {
+        Vector2d v = new Vector2d(1, 1);
+
+        Animal animalA = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 100, 100);
+        Animal animalB = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 100, 100);
+        Animal animalC = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 100, 100);
+        Animal animalD = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(), 100, 100);
+
+        Animal animalE = animalA.reproduce(animalB, v);
+        Animal animalF = animalB.reproduce(animalC, v);
+        Animal animalG = animalA.reproduce(animalD, v);
+        Animal animalH = animalF.reproduce(animalG, v);
+        Animal animalI = animalB.reproduce(animalH, v);
+        Animal animalJ = animalE.reproduce(animalI, v);
+
+        assertEquals(2, animalA.getNumberOfChildren());
+        assertEquals(3, animalB.getNumberOfChildren());
+        assertEquals(1, animalC.getNumberOfChildren());
+        assertEquals(1, animalD.getNumberOfChildren());
+        assertEquals(1, animalE.getNumberOfChildren());
+        assertEquals(1, animalF.getNumberOfChildren());
+        assertEquals(1, animalG.getNumberOfChildren());
+        assertEquals(1, animalH.getNumberOfChildren());
+        assertEquals(1, animalI.getNumberOfChildren());
+        assertEquals(0, animalJ.getNumberOfChildren());
+
+        assertEquals(5, animalA.getNumberOfOffspring());
+        assertEquals(5, animalB.getNumberOfOffspring());
+        assertEquals(4, animalC.getNumberOfOffspring());
+        assertEquals(4, animalD.getNumberOfOffspring());
+        assertEquals(1, animalE.getNumberOfOffspring());
+        assertEquals(3, animalF.getNumberOfOffspring());
+        assertEquals(3, animalG.getNumberOfOffspring());
+        assertEquals(2, animalH.getNumberOfOffspring());
+        assertEquals(1, animalI.getNumberOfOffspring());
+        assertEquals(0, animalJ.getNumberOfOffspring());
     }
 }

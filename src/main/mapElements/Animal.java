@@ -7,7 +7,9 @@ import map.IPositionChangeObserver;
 import map.WorldMap;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Animal implements IMapElement {
     public static int moveEnergy;
@@ -20,6 +22,12 @@ public class Animal implements IMapElement {
 
     private final int maxEnergy;
 
+    private boolean alive;
+    private int age;
+    private int deathTime;
+
+    private List<Animal> children = new ArrayList<>();
+
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(WorldMap map, int x, int y, MapDirection direction, Genome genome, int energy, int maxEnergy){
@@ -31,6 +39,9 @@ public class Animal implements IMapElement {
         this.energy = energy;
 
         this.maxEnergy = maxEnergy;
+
+        this.alive = true;
+        this.age = 0;
     }
 
     public String toString(){
@@ -93,7 +104,23 @@ public class Animal implements IMapElement {
         this.energy -= this.energy/4;
         otherAnimal.energy -= otherAnimal.energy/4;
 
+        this.addChild(babyAnimal);
+        otherAnimal.addChild(babyAnimal);
+
         return babyAnimal;
+    }
+
+    public void makeOlder() {
+        this.age += 1;
+    }
+
+    public void kill(int currentDay) {
+        this.alive = false;
+        this.deathTime = currentDay;
+    }
+
+    public void addChild(Animal child) {
+        this.children.add(child);
     }
 
     public void addObserver(IPositionChangeObserver observer){
@@ -110,6 +137,36 @@ public class Animal implements IMapElement {
 
     public int getEnergy() {
         return this.energy;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public int getDeathTime() {
+        return this.deathTime;
+    }
+
+    public int getNumberOfChildren() {
+        return this.children.size();
+    }
+
+    public int getNumberOfOffspring() {
+        Set<Animal> offspring = new HashSet<>();
+
+        for (Animal child : this.children){
+            offspring.add(child);
+            child.getOffspring(offspring);
+        }
+
+        return offspring.size();
+    }
+
+    private void getOffspring(Set<Animal> offspring) {
+        for (Animal child : this.children) {
+            offspring.add(child);
+            child.getOffspring(offspring);
+        }
     }
 
     private void changePosition(Vector2d oldPosition, Vector2d newPosition) {

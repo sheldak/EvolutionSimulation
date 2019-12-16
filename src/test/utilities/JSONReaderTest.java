@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JSONReaderTest {
-    private JSONReader jsonReader = new JSONReader("src/res/testParameters.json");
+    private JSONReader jsonReader = new JSONReader("src/res/parameters/testParameters.json");
 
     @Test
     void testGetWidth() {

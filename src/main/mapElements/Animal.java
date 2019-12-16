@@ -139,6 +139,10 @@ public class Animal implements IMapElement {
         return this.energy;
     }
 
+    public int getMaxEnergy() {
+        return this.maxEnergy;
+    }
+
     public int getAge() {
         return this.age;
     }

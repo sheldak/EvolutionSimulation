@@ -119,6 +119,14 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         this.elementsMap.get(grass.getPosition()).add(grass);
     }
 
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     // statistics
     public int getNumberOfAnimals() {
         return this.animals.size();

@@ -17,7 +17,7 @@ public class Simulation {
         this.simulationView = simulationView;
         this.simulationActive = true;
 
-        JSONReader jsonReader = new JSONReader("src/res/parameters.json");
+        JSONReader jsonReader = new JSONReader("src/res/parameters/parameters.json");
 
         this.mapA = new WorldMap(jsonReader.getWidth(), jsonReader.getHeight(),
                 jsonReader.getPlantEnergy(), jsonReader.getMoveEnergy());
@@ -31,16 +31,23 @@ public class Simulation {
                 jsonReader.getInitialNumberOfAnimals(), jsonReader.getStartEnergy());
         mapB.startWorld(worldBuilderB, jsonReader.getJungleRatio(),
                 jsonReader.getInitialNumberOfAnimals(), jsonReader.getStartEnergy());
+
+        this.simulationView.addMaps(mapA, mapB);
+        this.simulationView.passSimulation(this);
     }
 
     public void simulate() {
         mapA.nextDay();
-        out.println(mapA.toString());
+//        out.println(mapA.toString());
 
         mapB.nextDay();
-        out.println(mapB.toString());
+//        out.println(mapB.toString());
 
         simulationView.draw();
+    }
+
+    public void changeState() {
+        this.simulationActive = !this.simulationActive;
     }
 
     public boolean getSimulationActive() {

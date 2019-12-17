@@ -34,7 +34,7 @@ public class WorldBuilder {
                 (this.mapWidth - this.jungleWidth)/2, (this.mapHeight - this.jungleHeight)/2);
     }
 
-    void placeInitialAnimals(int number, int startEnergy) {
+    void placeInitialAnimals(int number) {
         for (int i=0; i<number; i++) {
             int animalX = new Random().nextInt(this.mapWidth);
             int animalY = new Random().nextInt(this.mapHeight);
@@ -43,7 +43,7 @@ public class WorldBuilder {
                 // when there is no other animal on this place
                 if (!this.map.isOccupied(new Vector2d(animalX, animalY))) {
                     Animal newAnimal = new Animal(this.map, animalX, animalY, MapDirection.getRandomDirection(),
-                            new Genome(), startEnergy, startEnergy);
+                            new Genome(), Animal.startEnergy);
 
                     this.map.addAnimal(newAnimal);
 

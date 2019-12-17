@@ -26,7 +26,7 @@ public class Main extends Application{
             Runnable runnable = simulation::simulate;
             while (true) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(30);
                 } catch (InterruptedException ignore) {} // TODO improve exception
 
                 if (simulation.getSimulationActive()) {

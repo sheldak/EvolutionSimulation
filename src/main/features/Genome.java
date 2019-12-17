@@ -76,7 +76,7 @@ public class Genome {
         return crossingOver(otherGenome, divisionPointA, divisionPointB);
     }
 
-    int[] getArray() {
+    public int[] getArray() {
         return this.genome;
     }
 }

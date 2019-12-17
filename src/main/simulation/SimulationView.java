@@ -4,7 +4,10 @@ import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,10 +26,16 @@ public class SimulationView extends BorderPane {
     private Canvas canvasA;
     private Canvas canvasB;
 
-    private Font font = new Font("Arial", 30);
+    private Font bigFont = new Font("Arial", 30);
+    private Font smallFont = new Font("Arial", 18);
 
     private VBox menuPanel = new VBox();
     private Button pauseButton;
+    private Button dominantGenomeButton;
+    private TextField textField;
+    private Button followHistoryButton;
+    private Button getStatisticsButton;
+    private Label label;
 
     private Image animalImage;
     private Image grassImage;
@@ -52,21 +61,20 @@ public class SimulationView extends BorderPane {
     }
 
     public void configureMenu() {
-        pauseButton = new Button("Pause");
-        pauseButton.setFont(font);
-        pauseButton.setOnAction(event -> {
-            if (simulation.getSimulationActive())
-                pauseButton.setText("Resume");
-            else
-                pauseButton.setText("Pause");
+        this.configurePauseButton();
+        this.configureDominantGenomeButton();
+        this.configureTextField();
+        this.configureFollowHistoryButton();
+        this.configureGetStatisticsButton();
+        this.configureLabel();
 
-            simulation.changeState();
-        });
-        pauseButton.setMinSize(200,50);
+        this.menuPanel.getChildren().addAll(this.pauseButton, this.dominantGenomeButton,
+                this.textField, this.followHistoryButton, this.getStatisticsButton, this.label);
 
-        menuPanel.getChildren().add(pauseButton);
-        setMargin(menuPanel, new Insets(0, 400, 0, 400));
-        this.setCenter(menuPanel);
+        this.menuPanel.setSpacing(7);
+
+        setMargin(this.menuPanel, new Insets(0, 400, 0, 400));
+        this.setCenter(this.menuPanel);
     }
 
     public void addMaps(WorldMap mapA, WorldMap mapB) {
@@ -81,6 +89,59 @@ public class SimulationView extends BorderPane {
     public void draw() {
         this.drawBackground();
         this.drawObjects();
+    }
+
+    private void configurePauseButton() {
+        this.pauseButton = new Button("Pause");
+        this.pauseButton.setFont(this.bigFont);
+        this.pauseButton.setOnAction(event -> {
+            if (this.simulation.getSimulationActive())
+                this.pauseButton.setText("Resume");
+            else
+                this.pauseButton.setText("Pause");
+
+            this.simulation.changeState();
+        });
+        this.pauseButton.setMinSize(200,50);
+    }
+
+    private void configureTextField() {
+        this.textField = new TextField();
+        this.textField.setMinSize(200, 20);
+        this.textField.setPromptText("Enter day");
+    }
+
+    private void configureDominantGenomeButton() {
+        this.dominantGenomeButton = new Button("Dominant genome");
+        this.dominantGenomeButton.setFont(this.smallFont);
+        this.dominantGenomeButton.setOnAction(event -> {
+
+        });
+        this.dominantGenomeButton.setMinSize(200, 30);
+    }
+
+    private void configureFollowHistoryButton() {
+        this.followHistoryButton = new Button("Follow history");
+        this.followHistoryButton.setFont(this.smallFont);
+        this.followHistoryButton.setOnAction(event -> {
+
+        });
+        this.followHistoryButton.setMinSize(200, 30);
+    }
+
+    private void configureGetStatisticsButton() {
+        this.getStatisticsButton = new Button("Get statistics");
+        this.getStatisticsButton.setFont(this.smallFont);
+        this.getStatisticsButton.setOnAction(event -> {
+
+        });
+        this.getStatisticsButton.setMinSize(200, 30);
+    }
+
+    private void configureLabel() {
+        this.label = new Label();
+        this.label.setText("Statistics");
+        this.setMinSize(200, 300);
     }
 
     private void drawBackground() {
@@ -123,17 +184,12 @@ public class SimulationView extends BorderPane {
         if (object instanceof Animal) {
             gc.drawImage(animalImage, layoutX + 1, layoutY + 1);
 
-            int animalEnergy = ((Animal) object).getEnergy();
-            int animalMaxEnergy = ((Animal) object).getMaxEnergy();
-
-            if (animalEnergy > animalMaxEnergy * 3 / 4)
+            if (((Animal) object).hasHigherThanStartEenrgy())
                 gc.drawImage(highEnergyBar, layoutX + 1, layoutY + 7);
-            else if (animalEnergy > animalMaxEnergy / 2)
+            else if (((Animal) object).hasMinimumReproductionEnergy())
                 gc.drawImage(mediumEnergyBar, layoutX + 1, layoutY + 7);
-            else if (animalEnergy > animalMaxEnergy / 4)
-                gc.drawImage(lowEnergyBar, layoutX + 1, layoutY + 7);
             else
-                gc.drawImage(veryLowEnergyBar, layoutX + 1, layoutY + 7);
+                gc.drawImage(lowEnergyBar, layoutX + 1, layoutY + 7);
         }
 
         else if (object instanceof Grass)

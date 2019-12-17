@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WorldBuilderTest {
-    private WorldMap map = new WorldMap(4, 8, 50, 10);
+    private WorldMap map = new WorldMap(4, 8, 50, 10, 30);
     WorldBuilder worldBuilder = new WorldBuilder(map);
 
     @Test
     void testPlaceGrass() {
-        map.startWorld(worldBuilder, 0.5f, 0, 10);
+        map.startWorld(worldBuilder, 0.5f, 0);
         map.nextDay();
         map.nextDay();
         map.nextDay();

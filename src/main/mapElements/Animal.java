@@ -6,13 +6,12 @@ import features.Vector2d;
 import map.IPositionChangeObserver;
 import map.WorldMap;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Animal implements IMapElement {
     public static int moveEnergy;
+    public static int startEnergy;
+
     private WorldMap map;
     private Vector2d position;
     private MapDirection animalDirection;
@@ -20,25 +19,24 @@ public class Animal implements IMapElement {
     private final Genome genome;
     private int energy;
 
-    private final int maxEnergy;
-
     private boolean alive;
     private int age;
     private int deathTime;
+
+    private Map<Integer, Integer> childrenAfterNDays = new HashMap<>();
+    private Map<Integer, Integer> offspringAfterNDays = new HashMap<>();
 
     private List<Animal> children = new ArrayList<>();
 
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
-    public Animal(WorldMap map, int x, int y, MapDirection direction, Genome genome, int energy, int maxEnergy){
+    public Animal(WorldMap map, int x, int y, MapDirection direction, Genome genome, int energy){
         this.map = map;
         this.position = new Vector2d(x, y);
         this.animalDirection = direction;
 
         this.genome = genome;
         this.energy = energy;
-
-        this.maxEnergy = maxEnergy;
 
         this.alive = true;
         this.age = 0;
@@ -81,25 +79,21 @@ public class Animal implements IMapElement {
     }
 
     public void consumeGrass(int plantEnergy) {
-        System.out.println(this.energy);
         this.energy += plantEnergy;
-        System.out.println(this.energy);
+    }
 
-        if (this.energy > this.maxEnergy)
-            this.energy = this.maxEnergy;
-
-        System.out.println(this.energy);
+    public boolean hasHigherThanStartEenrgy() {
+        return this.energy >= Animal.startEnergy;
     }
 
     public boolean hasMinimumReproductionEnergy() {
-        return this.energy >= this.maxEnergy/2;
+        return this.energy >= Animal.startEnergy/2;
     }
 
     public Animal reproduce(Animal otherAnimal, Vector2d babyPosition) {
         Genome babyGenome = this.genome.crossingOver(otherAnimal.genome);
         Animal babyAnimal = new Animal(this.map, babyPosition.getX(), babyPosition.getY(),
-                MapDirection.getRandomDirection(), babyGenome, this.energy/4 + otherAnimal.energy/4,
-                this.maxEnergy);
+                MapDirection.getRandomDirection(), babyGenome, this.energy/4 + otherAnimal.energy/4);
 
         this.energy -= this.energy/4;
         otherAnimal.energy -= otherAnimal.energy/4;
@@ -112,6 +106,11 @@ public class Animal implements IMapElement {
 
     public void makeOlder() {
         this.age += 1;
+    }
+
+    public void saveStatistics() {
+        this.childrenAfterNDays.put(this.map.getCurrentDay(), this.getNumberOfChildren());
+        this.offspringAfterNDays.put(this.map.getCurrentDay(), this.getNumberOfOffspring());
     }
 
     public void kill(int currentDay) {
@@ -135,12 +134,12 @@ public class Animal implements IMapElement {
         return this.position;
     }
 
-    public int getEnergy() {
-        return this.energy;
+    public int[] getGenomeArray() {
+        return this.genome.getArray();
     }
 
-    public int getMaxEnergy() {
-        return this.maxEnergy;
+    public int getEnergy() {
+        return this.energy;
     }
 
     public int getAge() {

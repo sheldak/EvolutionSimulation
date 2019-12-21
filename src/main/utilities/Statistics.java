@@ -1,80 +1,121 @@
 package utilities;
 
-import javafx.util.Pair;
+import features.Genome;
 import map.WorldMap;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Statistics {
-    private WorldMap mapA;
-    private WorldMap mapB;
+    private WorldMap map;
 
-    private Map<Integer, Integer> animalsAfterNDaysA = new HashMap<>();
-    private Map<Integer, Integer> grassAfterNDaysA = new HashMap<>();
-    private Map<Integer, Integer> dominantGeneAfterNDaysA = new HashMap<>();
-    private Map<Integer, Integer> averageEnergyAfterNDaysA = new HashMap<>();
-    private Map<Integer, Integer> averageLifetimeAfterNDaysA = new HashMap<>();
-    private Map<Integer, Integer> averageChildrenAfterNDaysA = new HashMap<>();
+    private int currentDay;
 
-    private Map<Integer, Integer> animalsAfterNDaysB = new HashMap<>();
-    private Map<Integer, Integer> grassAfterNDaysB = new HashMap<>();
-    private Map<Integer, Integer> dominantGeneAfterNDaysB = new HashMap<>();
-    private Map<Integer, Integer> averageEnergyAfterNDaysB = new HashMap<>();
-    private Map<Integer, Integer> averageLifetimeAfterNDaysB = new HashMap<>();
-    private Map<Integer, Integer> averageChildrenAfterNDaysB = new HashMap<>();
+    private int animals;
+    private int grasses;
+    private Genome dominantGenome;
+    private int averageEnergy;
+    private int averageLifetime;
+    private double averageChildren;
 
-    String statisticsString;
+    private int averageAnimalsAfterNDays;
+    private int averageGrassesAfterNDays;
+    private Genome averageGenomeAfterNDays;
+    private double averageEnergyAfterNDays;
+    private double averageLifetimeAfterNDays;
+    private double averageChildrenAfterNDays;
 
-    public Statistics(WorldMap mapA, WorldMap mapB) {
-        this.mapA = mapA;
-        this.mapB = mapB;
+    private Map<Genome, Integer> dominantGenomeHistory = new HashMap<>();
+
+
+    public Statistics(WorldMap map) {
+        this.map = map;
     }
 
     public void updateStatistics() {
-        // same day for both maps
-        int day = this.mapA.getCurrentDay();
+        this.currentDay = map.getCurrentDay();
 
-        this.animalsAfterNDaysA.put(day, this.mapA.getNumberOfAnimals());
-        this.grassAfterNDaysA.put(day, this.mapA.getAmountOfGrass());
-        this.dominantGeneAfterNDaysA.put(day, this.mapA.getDominantGene());
-        this.averageEnergyAfterNDaysA.put(day, this.mapA.getAverageAnimalsEnergy());
-        this.averageLifetimeAfterNDaysA.put(day, this.mapA.getAverageAnimalsLifetime());
-        this.averageChildrenAfterNDaysA.put(day, this.mapA.getAverageChildrenNumber());
+        this.animals = this.map.getNumberOfAnimals();
+        this.grasses = this.map.getAmountOfGrass();
+        this.dominantGenome = this.map.getDominantGenome();
+        this.averageEnergy = this.map.getAverageAnimalsEnergy();
+        this.averageLifetime = this.map.getAverageAnimalsLifetime();
+        this.averageChildren = Math.round(this.map.getAverageChildrenNumber() * 10) / 10.0;
 
-        this.animalsAfterNDaysB.put(day, this.mapB.getNumberOfAnimals());
-        this.grassAfterNDaysB.put(day, this.mapB.getAmountOfGrass());
-        this.dominantGeneAfterNDaysB.put(day, this.mapB.getDominantGene());
-        this.averageEnergyAfterNDaysB.put(day, this.mapB.getAverageAnimalsEnergy());
-        this.averageLifetimeAfterNDaysB.put(day, this.mapB.getAverageAnimalsLifetime());
-        this.averageChildrenAfterNDaysB.put(day, this.mapB.getAverageChildrenNumber());
-
-        this.prepareStatistics();
+        this.updateAverageStatistics();
     }
 
-    public void prepareStatistics() {
-        int day = this.mapA.getCurrentDay();
+    public void writeStatistics() {
+        JSONWriter jsonWriter = new JSONWriter("src/res/statistics/statistics.json");
 
-        int animalsA = this.animalsAfterNDaysA.get(day);
-        int grassesA = this.grassAfterNDaysA.get(day);
-        int geneA = this.dominantGeneAfterNDaysA.get(day);
-        int energyA = this.averageEnergyAfterNDaysA.get(day);
-        int lifetimeA = this.averageLifetimeAfterNDaysA.get(day);
-        int childrenA = this.averageChildrenAfterNDaysA.get(day);
-
-        int animalsB = this.animalsAfterNDaysB.get(day);
-        int grassesB = this.grassAfterNDaysB.get(day);
-        int geneB = this.dominantGeneAfterNDaysB.get(day);
-        int energyB = this.averageEnergyAfterNDaysB.get(day);
-        int lifetimeB = this.averageLifetimeAfterNDaysB.get(day);
-        int childrenB = this.averageChildrenAfterNDaysB.get(day);
-
-        this.statisticsString = String.format("Statistics     map A     map B \n " +
-                                         "Animals        %d      %d  \n" +
-                                         "Plants         %d      %d", animalsA, animalsB, grassesA, grassesB);
+        try {
+            jsonWriter.writeToJSON(this.averageAnimalsAfterNDays, this.averageGrassesAfterNDays,
+                    this.getDominantGenome(this.dominantGenomeHistory).getArray(), this.averageEnergyAfterNDays,
+                    this.averageLifetimeAfterNDays, this.averageChildrenAfterNDays);
+        } catch (Exception ex) {
+            System.out.println("Writing to file failed");
+        }
     }
 
-    public String getStatistics() {
-        return this.statisticsString;
+    public int getCurrentDay() {
+        return this.currentDay;
+    }
+
+    public int getAnimals() {
+        return this.animals;
+    }
+
+    public int getGrasses() {
+        return this.grasses;
+    }
+
+    public Genome getDominantGenome() {
+        return this.dominantGenome;
+    }
+
+    public int getAverageEnergy() {
+        return this.averageEnergy;
+    }
+
+    public int getAverageLifetime() {
+        return this.averageLifetime;
+    }
+
+    public double getAverageChildren() {
+        return this.averageChildren;
+    }
+
+    private Genome getDominantGenome(Map<Genome, Integer> dominantGenomeHistory) { // TODO the same method in WorldMap so maybe put it in Genome?
+        Genome mostPopularGenome = null;
+
+        for (Map.Entry<Genome, Integer> genomeEntry : dominantGenomeHistory.entrySet()) {
+            if (mostPopularGenome == null || genomeEntry.getValue() > dominantGenomeHistory.get(mostPopularGenome))
+                mostPopularGenome = genomeEntry.getKey();
+        }
+
+        return mostPopularGenome;
+    }
+
+    private void updateAverageStatistics() {
+        int currDay = this.map.getCurrentDay();
+
+        this.averageAnimalsAfterNDays = (this.averageAnimalsAfterNDays * (currDay - 1) + this.animals) / currDay;
+        this.averageGrassesAfterNDays = (this.averageGrassesAfterNDays * (currDay - 1) + this.grasses) / currDay;
+        this.averageEnergyAfterNDays = (this.averageEnergyAfterNDays * (currDay - 1) + this.averageEnergy) / currDay;
+        this.averageLifetimeAfterNDays =
+                (this.averageLifetimeAfterNDays * (currDay - 1) + this.averageLifetime) / currDay;
+        this.averageChildrenAfterNDays =
+                (this.averageChildrenAfterNDays * (currDay - 1) + this.averageChildren) / currDay;
+
+        if (this.dominantGenomeHistory.containsKey(this.dominantGenome)) {
+            int dominantGenomeOccurrence = this.dominantGenomeHistory.get(this.dominantGenome);
+
+            if(dominantGenomeOccurrence >= 1) {
+                this.dominantGenomeHistory.remove(this.dominantGenome);
+                this.dominantGenomeHistory.put(this.dominantGenome, dominantGenomeOccurrence + 1);
+            }
+            else
+                this.dominantGenomeHistory.put(this.dominantGenome, 1);
+        }
     }
 }

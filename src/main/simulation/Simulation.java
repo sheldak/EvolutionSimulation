@@ -5,16 +5,13 @@ import map.WorldMap;
 import utilities.JSONReader;
 import utilities.Statistics;
 
-import static java.lang.System.out;
-
 public class Simulation {
     private boolean simulationActive;
     private SimulationView simulationView;
 
-    private Statistics statistics;
+    private Statistics statisticsA, statisticsB;
 
     private WorldMap mapA, mapB;
-    private WorldBuilder worldBuilderA, worldBuilderB;
 
     public Simulation(SimulationView simulationView) {
         this.simulationView = simulationView;
@@ -27,29 +24,29 @@ public class Simulation {
         this.mapB = new WorldMap(jsonReader.getWidth(), jsonReader.getHeight(),
                 jsonReader.getPlantEnergy(), jsonReader.getMoveEnergy(), jsonReader.getStartEnergy());
 
-        this.worldBuilderA = new WorldBuilder(this.mapA);
-        this.worldBuilderB = new WorldBuilder(this.mapB);
+        WorldBuilder worldBuilderA = new WorldBuilder(this.mapA);
+        WorldBuilder worldBuilderB = new WorldBuilder(this.mapB);
 
-        this.mapA.startWorld(this.worldBuilderA, jsonReader.getJungleRatio(),
+        this.mapA.startWorld(worldBuilderA, jsonReader.getJungleRatio(),
                 jsonReader.getInitialNumberOfAnimals());
-        this.mapB.startWorld(this.worldBuilderB, jsonReader.getJungleRatio(),
+        this.mapB.startWorld(worldBuilderB, jsonReader.getJungleRatio(),
                 jsonReader.getInitialNumberOfAnimals());
 
-        this.simulationView.addMaps(this.mapA, this.mapB);
-        this.simulationView.passSimulation(this);
+        this.statisticsA = new Statistics(this.mapA);
+        this.statisticsB = new Statistics(this.mapB);
 
-        this.statistics = new Statistics(this.mapA, this.mapB);
+        this.simulationView.passSimulationAndStatistics(this, this.statisticsA, this.statisticsB);
+        this.simulationView.createView(this.mapA, this.mapB);
     }
 
     public void simulate() {
-       this. mapA.nextDay();
-//        out.println(mapA.toString());
-
+        this.mapA.nextDay();
         this.mapB.nextDay();
-//        out.println(mapB.toString());
+
+        this.statisticsA.updateStatistics();
+        this.statisticsB.updateStatistics();
 
         this.simulationView.draw();
-        this.statistics.updateStatistics();
     }
 
     public void changeState() {

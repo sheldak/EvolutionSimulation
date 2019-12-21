@@ -209,6 +209,19 @@ class WorldMapTest {
     }
 
     @Test
+    void testDominantGenome() {
+        int[] genomeArray = new int[32];
+        for (int i=0; i<32; i++) genomeArray[i] = 2;
+        map.addGenome(new Genome(genomeArray));
+
+        assertEquals(new Genome(genomeArray), map.getDominantGenome());
+
+        map.removeGenome(new Genome(genomeArray));
+
+        assertNull(map.getDominantGenome());
+    }
+
+    @Test
     void testGetNumberOfAnimals() {
         map.addAnimal(animal_1_1);
 

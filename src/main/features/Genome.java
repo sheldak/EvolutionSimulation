@@ -3,7 +3,7 @@ package features;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Genome {
+public class Genome { // TODO make one way of passing genome
     private int[] genome;
 
     public Genome() {
@@ -13,6 +13,19 @@ public class Genome {
     public Genome(int[] genome) {
         Arrays.sort(genome);
         this.genome = genome;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genome genome1 = (Genome) o;
+        return Arrays.equals(this.genome, genome1.genome);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(this.genome);
     }
 
     public void setRandomGenome() {

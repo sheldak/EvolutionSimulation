@@ -43,7 +43,7 @@ public class Animal implements IMapElement {
     }
 
     public String toString(){
-        switch(animalDirection){
+        switch(this.animalDirection){
             case NORTH:
                 return " N ";
             case NORTHEAST:
@@ -132,6 +132,10 @@ public class Animal implements IMapElement {
 
     public Vector2d getPosition(){
         return this.position;
+    }
+
+    public Genome getGenome() {
+        return  this.genome;
     }
 
     public int[] getGenomeArray() {

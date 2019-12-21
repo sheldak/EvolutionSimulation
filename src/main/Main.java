@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import simulation.Simulation;
 import simulation.SimulationView;
 
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.System.out;
 
 public class Main extends Application{
@@ -18,7 +20,7 @@ public class Main extends Application{
         stage.setTitle("Evolution Simulator");
 
         SimulationView simulationView = new SimulationView();
-        Scene scene = new Scene(simulationView, 1000, 400);
+        Scene scene = new Scene(simulationView, 1100, 400);
 
         Simulation simulation = new Simulation(simulationView);
 
@@ -26,7 +28,7 @@ public class Main extends Application{
             Runnable runnable = simulation::simulate;
             while (true) {
                 try {
-                    Thread.sleep(30);
+                    TimeUnit.MILLISECONDS.sleep(30);
                 } catch (InterruptedException ignore) {} // TODO improve exception
 
                 if (simulation.getSimulationActive()) {

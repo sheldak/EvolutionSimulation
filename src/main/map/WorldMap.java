@@ -1,7 +1,7 @@
 package map;
 
-import javafx.util.Pair;
-import utilities.MapVisualizer;
+import features.Genome;
+import utilities.MapVisualizerX;
 import features.Vector2d;
 import mapElements.Animal;
 import mapElements.Grass;
@@ -19,6 +19,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     private List<Animal> animals = new ArrayList<>();
     private List<Grass> grasses = new ArrayList<>();
     private Map<Vector2d, List<Object>> elementsMap = new HashMap<>();
+    private Map<Genome, Integer> genomes = new HashMap<>();
 
     private List<Animal> deadAnimals = new ArrayList<>();
 
@@ -112,6 +113,8 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         animal.addObserver(this);
         this.animals.add(animal);
         this.elementsMap.get(animal.getPosition()).add(animal);
+
+        this.addGenome(animal.getGenome());
     }
 
     public void removeAnimal(Animal animal) {
@@ -121,11 +124,34 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         this.animals.remove(animal);
 
         this.deadAnimals.add(animal);
+
+        this.removeGenome(animal.getGenome());
     }
 
     public void addGrass(Grass grass) {
         this.grasses.add(grass);
         this.elementsMap.get(grass.getPosition()).add(grass);
+    }
+
+    public void addGenome(Genome genome) {
+        if (this.genomes.containsKey(genome)) {
+            int genomeOccurrence = this.genomes.get(genome);
+            this.genomes.remove(genome);
+            this.genomes.put(genome, genomeOccurrence + 1);
+        }
+        else
+            this.genomes.put(genome, 1);
+    }
+
+    public void removeGenome(Genome genome) {
+        if (this.genomes.containsKey(genome)) {
+            int genomeOccurrence = this.genomes.get(genome);
+
+            this.genomes.remove(genome);
+
+            if (genomeOccurrence >= 2)
+                this.genomes.put(genome, genomeOccurrence - 1);
+        }
     }
 
     public int getWidth() {
@@ -171,6 +197,17 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         return mostPopular;
     }
 
+    public Genome getDominantGenome() {
+         Genome dominantGenome = null;
+
+         for (Map.Entry<Genome, Integer> genomeEntry : this.genomes.entrySet()) {
+             if (dominantGenome == null || genomeEntry.getValue() > this.genomes.get(dominantGenome))
+                 dominantGenome = genomeEntry.getKey();
+         }
+
+         return dominantGenome;
+    }
+
     public int getAverageAnimalsEnergy() {
         int sum = 0;
         for (Animal animal : this.animals)
@@ -193,7 +230,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         return sum / this.deadAnimals.size();
     }
 
-    public int getAverageChildrenNumber() {
+    public double getAverageChildrenNumber() {
         int sum = 0;
         for (Animal animal : this.animals)
             sum += animal.getNumberOfChildren();
@@ -201,7 +238,18 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         if (this.animals.size() == 0)
             return 0;
 
-        return sum / this.animals.size();
+        return (double) sum / (double) this.animals.size();
+    }
+
+    public List<Animal> getDominantAnimals() {
+        List <Animal> dominantAnimals = new ArrayList<>();
+        Genome dominantGenome = this.getDominantGenome();
+
+        for(Animal animal : animals) {
+            if (animal.getGenome().equals(dominantGenome))
+                dominantAnimals.add(animal);
+        }
+        return dominantAnimals;
     }
 
     private void checkGrassConsumption(Set <Vector2d> positions) {
@@ -286,11 +334,11 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     }
 
     private String draw(){
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
+        MapVisualizerX mapVisualizerX = new MapVisualizerX(this);
 
         Vector2d leftDown = new Vector2d(0,0);
         Vector2d rightUp = new Vector2d(this.width-1, this.height-1);
 
-        return mapVisualizer.draw(leftDown, rightUp);
+        return mapVisualizerX.draw(leftDown, rightUp);
     }
 }

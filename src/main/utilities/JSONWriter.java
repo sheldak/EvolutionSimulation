@@ -2,6 +2,7 @@ package utilities;
 
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -13,7 +14,8 @@ public class JSONWriter {
     }
 
     @SuppressWarnings("unchecked")
-    public void writeToJSON(int animals, int grasses, int[] genome, double energy, double lifetime, double children) throws IOException {
+    public void writeToJSON(int animals, int grasses, int[] genome, double energy, double lifetime, double children)
+            throws IOException {
         JSONObject jsonObject = new JSONObject();
 
         StringBuilder genomeString = new StringBuilder();
@@ -30,6 +32,5 @@ public class JSONWriter {
         try (FileWriter file = new FileWriter(this.path)) {
             file.write(jsonObject.toJSONString());
         }
-
     }
 }

@@ -26,6 +26,7 @@ import utilities.Statistics;
 import visualization.MapVisualizer;
 import visualization.MenuPanel;
 import visualization.MenuState;
+import visualization.MouseManager;
 
 public class SimulationView extends BorderPane {
     private Simulation simulation;
@@ -40,25 +41,11 @@ public class SimulationView extends BorderPane {
     private MapVisualizer mapVisualizerB;
 
     private MenuPanel menuPanel;
-    private Button pauseButton;
-    private Button dominantGenomeButton;
-    private TextField textField;
-    private Button followHistoryButton;
-    private Button getStatisticsButton;
-    private Label label;
-
-    private Image animalImage;
-    private Image grassImage;
-    private Image highEnergyBar;
-    private Image mediumEnergyBar;
-    private Image lowEnergyBar;
 
     private Statistics statisticsA;
     private Statistics statisticsB;
 
-    private Font bigFont = new Font("Arial", 30);
-    private Font smallFont = new Font("Arial", 18);
-    private Font labelFont = new Font("Arial", 13);
+    private MouseManager mouseManager;
 
     public SimulationView() {
         this.canvasA = new Canvas(400, 400);
@@ -91,6 +78,23 @@ public class SimulationView extends BorderPane {
         this.getChildren().addAll(this.canvasA, this.canvasB);
 
         this.menuPanel.configureMenu();
+
+        this.mouseManager = new MouseManager(this.mapA, this.mapB, this.menuPanel);
+    }
+
+    public void handleClick(double posX, double posY) {
+        if (posX <= 400) {
+            this.statisticsA.changeFollowedAnimal(this.mouseManager.getAnimalFromClick(posX, posY, mapA));
+            this.statisticsB.changeFollowedAnimal(null);
+
+        }
+
+        else if (posX >= 700) {
+            this.statisticsB.changeFollowedAnimal(this.mouseManager.getAnimalFromClick(posX - 700, posY, mapB));
+            this.statisticsA.changeFollowedAnimal(null);
+        }
+
+        this.menuPanel.updateLabel();
     }
 
     public void draw() {
@@ -105,6 +109,11 @@ public class SimulationView extends BorderPane {
         if (menuPanel.getMenuState() == MenuState.GENOME) {
             mapVisualizerA.drawMarkedAnimals();
             mapVisualizerB.drawMarkedAnimals();
+        }
+
+        if (menuPanel.getMenuState() == MenuState.FOLLOWING) {
+            mapVisualizerA.drawFollowedAnimal(this.statisticsA.getFollowedAnimal());
+            mapVisualizerB.drawFollowedAnimal(this.statisticsB.getFollowedAnimal());
         }
     }
 }

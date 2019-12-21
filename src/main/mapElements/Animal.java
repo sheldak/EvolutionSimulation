@@ -19,12 +19,8 @@ public class Animal implements IMapElement {
     private final Genome genome;
     private int energy;
 
-    private boolean alive;
     private int age;
     private int deathTime;
-
-    private Map<Integer, Integer> childrenAfterNDays = new HashMap<>();
-    private Map<Integer, Integer> offspringAfterNDays = new HashMap<>();
 
     private List<Animal> children = new ArrayList<>();
 
@@ -38,7 +34,6 @@ public class Animal implements IMapElement {
         this.genome = genome;
         this.energy = energy;
 
-        this.alive = true;
         this.age = 0;
     }
 
@@ -108,13 +103,7 @@ public class Animal implements IMapElement {
         this.age += 1;
     }
 
-    public void saveStatistics() {
-        this.childrenAfterNDays.put(this.map.getCurrentDay(), this.getNumberOfChildren());
-        this.offspringAfterNDays.put(this.map.getCurrentDay(), this.getNumberOfOffspring());
-    }
-
     public void kill(int currentDay) {
-        this.alive = false;
         this.deathTime = currentDay;
     }
 

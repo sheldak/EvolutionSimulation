@@ -1,13 +1,17 @@
 package utilities;
 
 import features.Genome;
+import features.Vector2d;
 import map.WorldMap;
+import mapElements.Animal;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Statistics {
     private WorldMap map;
+
+    private String writingPath;
 
     private int currentDay;
 
@@ -20,16 +24,33 @@ public class Statistics {
 
     private int averageAnimalsAfterNDays;
     private int averageGrassesAfterNDays;
-    private Genome averageGenomeAfterNDays;
     private double averageEnergyAfterNDays;
     private double averageLifetimeAfterNDays;
     private double averageChildrenAfterNDays;
 
     private Map<Genome, Integer> dominantGenomeHistory = new HashMap<>();
 
+    private Animal followedAnimal;
+    private Vector2d followedAnimalPosition;
+    private int followedAnimalChildrenAtStart; // in the beginning of being followed
+    private int followedAnimalOffspringAtStart;
+    private int followedAnimalChildren;   // all children - that at the beginning of being followed
+    private int followedAnimalOffspring;
+    private int followingEndTime;
 
-    public Statistics(WorldMap map) {
+
+    public Statistics(WorldMap map, String writingPath) {
         this.map = map;
+
+        this.writingPath = writingPath;
+
+        this.followedAnimal = null;
+        this.followedAnimalPosition = new Vector2d(-1, -1);
+        this.followedAnimalChildrenAtStart = 0;
+        this.followedAnimalOffspringAtStart = 0;
+        this.followedAnimalChildren = 0;
+        this.followedAnimalOffspring = 0;
+        this.followingEndTime = 100000;
     }
 
     public void updateStatistics() {
@@ -43,11 +64,40 @@ public class Statistics {
         this.averageChildren = Math.round(this.map.getAverageChildrenNumber() * 10) / 10.0;
 
         this.updateAverageStatistics();
+        this.updateFollowedAnimalStatistics();
+    }
+
+    public void changeFollowedAnimal(Animal animal) {
+        this.followedAnimal = animal;
+
+        if (this.followedAnimal != null) {
+            this.followedAnimalChildrenAtStart = animal.getNumberOfChildren();
+            this.followedAnimalOffspringAtStart = animal.getNumberOfOffspring();
+            this.followedAnimalChildren = this.followedAnimalChildrenAtStart;
+            this.followedAnimalOffspring = this.followedAnimalOffspringAtStart;
+        }
+        else {
+            this.followedAnimalPosition = new Vector2d(-1, -1);
+            this.followedAnimalChildrenAtStart = 0;
+            this.followedAnimalOffspringAtStart = 0;
+            this.followedAnimalChildren = 0;
+            this.followedAnimalOffspring = 0;
+            this.followingEndTime = 100000;
+        }
+    }
+
+    public void setFollowingEndTime(String endTimeString) {
+        try {
+            int endTime = Integer.parseInt(endTimeString);
+            if (this.currentDay < endTime)
+                this.followingEndTime = endTime;
+        } catch (NumberFormatException ex) {
+            // if is invalid just do not do anything
+        }
     }
 
     public void writeStatistics() {
-        JSONWriter jsonWriter = new JSONWriter("src/res/statistics/statistics.json");
-
+        JSONWriter jsonWriter = new JSONWriter(this.writingPath);
         try {
             jsonWriter.writeToJSON(this.averageAnimalsAfterNDays, this.averageGrassesAfterNDays,
                     this.getDominantGenome(this.dominantGenomeHistory).getArray(), this.averageEnergyAfterNDays,
@@ -85,6 +135,26 @@ public class Statistics {
         return this.averageChildren;
     }
 
+    public Animal getFollowedAnimal() {
+        return this.followedAnimal;
+    }
+
+    public Vector2d getFollowedAnimalPosition() {
+        return this.followedAnimalPosition;
+    }
+
+    public int getFollowedAnimalChildren() {
+        return this.followedAnimalChildren;
+    }
+
+    public int getFollowedAnimalOffspring() {
+        return this.followedAnimalOffspring;
+    }
+
+    public int getFollowingEndTime() {
+        return this.followingEndTime;
+    }
+
     private Genome getDominantGenome(Map<Genome, Integer> dominantGenomeHistory) { // TODO the same method in WorldMap so maybe put it in Genome?
         Genome mostPopularGenome = null;
 
@@ -110,12 +180,24 @@ public class Statistics {
         if (this.dominantGenomeHistory.containsKey(this.dominantGenome)) {
             int dominantGenomeOccurrence = this.dominantGenomeHistory.get(this.dominantGenome);
 
-            if(dominantGenomeOccurrence >= 1) {
+            if (dominantGenomeOccurrence >= 1) {
                 this.dominantGenomeHistory.remove(this.dominantGenome);
                 this.dominantGenomeHistory.put(this.dominantGenome, dominantGenomeOccurrence + 1);
             }
-            else
-                this.dominantGenomeHistory.put(this.dominantGenome, 1);
+        }
+        else
+            this.dominantGenomeHistory.put(this.dominantGenome, 1);
+    }
+
+    private void updateFollowedAnimalStatistics() {
+        if (this.followedAnimal != null && this.followingEndTime >= this.currentDay) {
+            this.followedAnimalPosition = this.followedAnimal.getPosition();
+
+            this.followedAnimalChildren =
+                    this.followedAnimal.getNumberOfChildren() - this.followedAnimalChildrenAtStart;
+
+            this.followedAnimalOffspring =
+                    this.followedAnimal.getNumberOfOffspring() - this.followedAnimalOffspringAtStart;
         }
     }
 }

@@ -32,8 +32,8 @@ public class Simulation {
         this.mapB.startWorld(worldBuilderB, jsonReader.getJungleRatio(),
                 jsonReader.getInitialNumberOfAnimals());
 
-        this.statisticsA = new Statistics(this.mapA);
-        this.statisticsB = new Statistics(this.mapB);
+        this.statisticsA = new Statistics(this.mapA, "src/res/statistics/statisticsA.json");
+        this.statisticsB = new Statistics(this.mapB, "src/res/statistics/statisticsB.json");
 
         this.simulationView.passSimulationAndStatistics(this, this.statisticsA, this.statisticsB);
         this.simulationView.createView(this.mapA, this.mapB);

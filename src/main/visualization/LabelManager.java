@@ -1,5 +1,6 @@
 package visualization;
 
+import mapElements.Animal;
 import utilities.Statistics;
 
 public class LabelManager {
@@ -22,6 +23,7 @@ public class LabelManager {
                 this.prepareDominantGenome();
                 break;
             case FOLLOWING:
+                this.prepareFollowingAnimal();
                 break;
         }
     }
@@ -88,8 +90,46 @@ public class LabelManager {
 
         if (this.statsB.getDominantGenome() != null)
             this.text += genomeBFirstLine.toString() + "\n              " +
-                    genomeBSecondLine.toString() + "\n \n";
+                    genomeBSecondLine.toString();
         else
             this.text += "     All animals have died";
+    }
+
+    public void prepareFollowingAnimal() {
+        Animal followedAnimal = null;
+        Statistics usedStats = null;
+
+        // there is always at most 1 followed animal (it can bo just on 1 map, the other map has followedAnimal == null)
+        if (this.statsA.getFollowedAnimal() != null) {
+            followedAnimal = this.statsA.getFollowedAnimal();
+            usedStats = this.statsA;
+        }
+
+        if (this.statsB.getFollowedAnimal() != null) {
+            followedAnimal = this.statsB.getFollowedAnimal();
+            usedStats = this.statsB;
+        }
+
+        if (followedAnimal == null || usedStats == null) {
+            this.text = "Click on the animal to follow it";
+        }
+        else {
+            this.text = String.format("                       Following animal \n \n" +
+                            "Day       %d \n" +
+                            "Following end at %d \n" +
+                            "Position (x,y)   %d  %d  \n" +
+                            "Children       %d \n" +
+                            "Offspring      %d \n",
+                    usedStats.getCurrentDay(),
+                    usedStats.getFollowingEndTime(),
+                    usedStats.getFollowedAnimalPosition().getX(), usedStats.getFollowedAnimalPosition().getY(),
+                    usedStats.getFollowedAnimalChildren(),
+                    usedStats.getFollowedAnimalOffspring());
+
+            if(!followedAnimal.isDead())
+                this.text += "Animal is alive";
+            else
+                this.text += String.format("Day of death: %d", + followedAnimal.getAge());
+        }
     }
 }

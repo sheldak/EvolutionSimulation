@@ -22,12 +22,13 @@ public class MenuPanel extends VBox {
 
     private Button pauseButton;
     private Button dominantGenomeButton;
-    private TextField textField;
     private Button followHistoryButton;
+    private TextField textField;
+    private Button submitButton;
     private Button getStatisticsButton;
     private Label label;
 
-    private Font bigFont = new Font("Arial", 30);
+    private Font bigFont = new Font("Arial", 26);
     private Font smallFont = new Font("Arial", 18);
     private Font labelFont = new Font("Arial", 13);
 
@@ -38,15 +39,16 @@ public class MenuPanel extends VBox {
     public void configureMenu() {
         this.configurePauseButton();
         this.configureDominantGenomeButton();
-        this.configureTextField();
         this.configureFollowHistoryButton();
+        this.configureTextField();
+        this.configureSubmitButton();
         this.configureGetStatisticsButton();
         this.configureLabel();
 
         this.menuState = MenuState.STATISTICS;
 
-        getChildren().addAll(this.pauseButton, this.dominantGenomeButton,
-                this.textField, this.followHistoryButton, this.getStatisticsButton, this.label);
+        getChildren().addAll(this.pauseButton, this.dominantGenomeButton, this.followHistoryButton,
+                this.textField, this.submitButton, this.getStatisticsButton, this.label);
 
         setSpacing(7);
     }
@@ -77,13 +79,7 @@ public class MenuPanel extends VBox {
 
             this.simulation.changeState();
         });
-        this.pauseButton.setMinSize(300,50);
-    }
-
-    private void configureTextField() {
-        this.textField = new TextField();
-        this.textField.setMinSize(300, 20);
-        this.textField.setPromptText("Enter day");
+        this.pauseButton.setMinSize(300,40);
     }
 
     private void configureDominantGenomeButton() {
@@ -94,15 +90,42 @@ public class MenuPanel extends VBox {
                 this.menuState = MenuState.GENOME;
             else
                 this.menuState = MenuState.STATISTICS;
+
+            this.updateLabel();
         });
         this.dominantGenomeButton.setMinSize(300, 30);
+    }
+
+    private void configureTextField() {
+        this.textField = new TextField();
+        this.textField.setMinSize(300, 20);
+        this.textField.setPromptText("Enter day");
+    }
+
+    private void configureSubmitButton() {
+        this.submitButton = new Button("Submit");
+        this.submitButton.setFont(this.smallFont);
+        this.submitButton.setOnAction(event -> {
+            if (this.menuState == MenuState.FOLLOWING && !this.textField.getText().equals("")) {
+                if (this.statisticsA.getFollowedAnimal() != null)
+                    this.statisticsA.setFollowingEndTime(this.textField.getText());
+                else if (this.statisticsB.getFollowedAnimal() != null)
+                    this.statisticsB.setFollowingEndTime(this.textField.getText());
+            }
+        });
+        this.submitButton.setMinSize(300, 30);
     }
 
     private void configureFollowHistoryButton() {
         this.followHistoryButton = new Button("Follow history");
         this.followHistoryButton.setFont(this.smallFont);
         this.followHistoryButton.setOnAction(event -> {
+            if (this.menuState != MenuState.FOLLOWING)
+                this.menuState = MenuState.FOLLOWING;
+            else
+                this.menuState = MenuState.STATISTICS;
 
+            this.updateLabel();
         });
         this.followHistoryButton.setMinSize(300, 30);
     }
@@ -113,6 +136,8 @@ public class MenuPanel extends VBox {
         this.getStatisticsButton.setOnAction(event -> {
             this.statisticsA.writeStatistics();
             this.statisticsB.writeStatistics();
+
+            this.updateLabel();
         });
         this.getStatisticsButton.setMinSize(300, 30);
     }

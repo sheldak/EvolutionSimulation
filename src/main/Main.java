@@ -1,14 +1,13 @@
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import simulation.Simulation;
 import simulation.SimulationView;
 
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.System.out;
 
 public class Main extends Application{
     public static void main(String[] args){
@@ -22,6 +21,9 @@ public class Main extends Application{
         SimulationView simulationView = new SimulationView();
         Scene scene = new Scene(simulationView, 1100, 400);
 
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED,
+                mouseEvent -> simulationView.handleClick(mouseEvent.getX(), mouseEvent.getY()));
+
         Simulation simulation = new Simulation(simulationView);
 
         Thread thread = new Thread(() -> {
@@ -29,7 +31,9 @@ public class Main extends Application{
             while (true) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(30);
-                } catch (InterruptedException ignore) {} // TODO improve exception
+                } catch (InterruptedException ex) {
+                    System.out.println("View thread sleep problem");
+                }
 
                 if (simulation.getSimulationActive()) {
                     Platform.runLater(runnable);

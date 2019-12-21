@@ -1,7 +1,6 @@
 package map;
 
 import features.Genome;
-import utilities.MapVisualizerX;
 import features.Vector2d;
 import mapElements.Animal;
 import mapElements.Grass;
@@ -23,11 +22,7 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
 
     private List<Animal> deadAnimals = new ArrayList<>();
 
-    // statistics
     private int currentDay;
-    private Map<Integer, Integer> animalsAfterNDays = new HashMap<>();
-    private Map<Integer, Integer> grassAfterNDays = new HashMap<>();
-
 
     public WorldMap(int width, int height, int plantEnergy, int moveEnergy, int startEnergy) {
         this.width = width;
@@ -53,11 +48,6 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         worldBuilder.placeInitialAnimals(numberOfAnimals);
 
         this.currentDay = 0;
-    }
-
-    @Override
-    public String toString() {
-        return this.draw();
     }
 
     @Override
@@ -95,11 +85,8 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
     public void nextDay(){
         this.currentDay += 1;
 
-        for(Animal animal : this.animals) {
+        for(Animal animal : this.animals)
             animal.makeOlder();
-            animal.saveStatistics();
-        }
-
 
         this.getRidOfDeadAnimals();
 
@@ -331,14 +318,5 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver {
         for (Animal animal : animalsToRemove) {
             this.removeAnimal(animal);
         }
-    }
-
-    private String draw(){
-        MapVisualizerX mapVisualizerX = new MapVisualizerX(this);
-
-        Vector2d leftDown = new Vector2d(0,0);
-        Vector2d rightUp = new Vector2d(this.width-1, this.height-1);
-
-        return mapVisualizerX.draw(leftDown, rightUp);
     }
 }

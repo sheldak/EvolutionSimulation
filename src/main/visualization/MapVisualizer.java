@@ -65,6 +65,16 @@ public class MapVisualizer {
         }
     }
 
+    public void drawFollowedAnimal(Animal followedAnimal) {
+        if (followedAnimal != null) {
+            GraphicsContext gc = this.canvas.getGraphicsContext2D();
+
+            int layoutX = followedAnimal.getPosition().getX() * (400 / map.getWidth());
+            int layoutY = 400 - followedAnimal.getPosition().getY() * (400 / map.getHeight());
+            gc.drawImage(this.imageLoader.getMarkedAnimalImage(), layoutX, layoutY);
+        }
+    }
+
     private void drawObject(IMapElement object, int layoutX, int layoutY) {
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
 

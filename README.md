@@ -1,8 +1,8 @@
 # EvolutionSimulation
 
 Used libraries:
-openjfx 11.0.2
-json simple 1.1
+- openjfx 11.0.2
+- json simple 1.1
 
 Instruction:
 - Dominant genomes button: showing dominant genomes for both maps

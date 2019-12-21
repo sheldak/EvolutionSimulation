@@ -68,7 +68,7 @@ public class MenuPanel extends VBox {
         return this.menuState;
     }
 
-    private void configurePauseButton() { // TODO get rid of redundancy
+    private void configurePauseButton() {
         this.pauseButton = new Button("Pause");
         this.pauseButton.setFont(this.bigFont);
         this.pauseButton.setOnAction(event -> {

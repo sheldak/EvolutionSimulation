@@ -1,3 +1,6 @@
+// used libraries: openjfx 11.0.2
+//                 json simple 1.1
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -15,7 +18,7 @@ public class Main extends Application{
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.setTitle("Evolution Simulator");
 
         SimulationView simulationView = new SimulationView();

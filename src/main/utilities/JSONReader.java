@@ -33,8 +33,8 @@ public class JSONReader {
 
             this.initialNumberOfAnimals = Math.toIntExact((Long) jsonObject.get("initialNumberOfAnimals"));
 
-        } catch (Exception ex) { // TODO make this catch better
-            out.println(ex.getMessage());
+        } catch (Exception ex) {
+            out.println("loading parameters has failed");
         }
     }
 

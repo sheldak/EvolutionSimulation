@@ -1,5 +1,6 @@
 // used libraries: openjfx 11.0.2
 //                 json simple 1.1
+// recommended size of the world: factors of 400
 
 import javafx.application.Application;
 import javafx.application.Platform;

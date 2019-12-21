@@ -4,17 +4,21 @@ import mapElements.Animal;
 import utilities.Statistics;
 
 public class LabelManager {
+    // class manages text which will be displayed on the label
     private String text;
 
+    // there is one labelManager object for both worlds
     private Statistics statsA;
     private Statistics statsB;
 
     public LabelManager(Statistics statisticsA, Statistics statisticsB) {
+        // getting statistics objects
         this.statsA = statisticsA;
         this.statsB = statisticsB;
     }
 
     public void updateLabel(MenuState menuState) {
+        // updating label text depending on current menu state
         switch(menuState) {
             case STATISTICS:
                 this.prepareStatistics();
@@ -28,11 +32,14 @@ public class LabelManager {
         }
     }
 
+    // getter
     public String getText() {
         return this.text;
     }
 
     private void prepareStatistics() {
+        // preparing daily statistics for both maps and saving it to one string
+
         // the same day for both maps
         int day = this.statsA.getCurrentDay();
 
@@ -51,6 +58,8 @@ public class LabelManager {
     }
 
     private void prepareDominantGenome() {
+        // preparing display of dominant genomes for both maps
+
         StringBuilder genomeAFirstLine = new StringBuilder();
         StringBuilder genomeASecondLine = new StringBuilder();
         StringBuilder genomeBFirstLine = new StringBuilder();
@@ -96,6 +105,8 @@ public class LabelManager {
     }
 
     public void prepareFollowingAnimal() {
+        // preparing statistics for the followed animal
+
         Animal followedAnimal = null;
         Statistics usedStats = null;
 
@@ -126,7 +137,7 @@ public class LabelManager {
 
             this.text = String.format("                       Following animal \n" +
                             "Day       %d \n" +
-                            "Following end at %d \n" +
+                            "Following ends at day %d \n" +
                             "Position (x,y)   %d  %d  \n" +
                             "Children       %d \n" +
                             "Offspring      %d \n" +

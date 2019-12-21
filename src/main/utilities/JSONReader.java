@@ -8,6 +8,9 @@ import java.io.FileReader;
 import static java.lang.System.out;
 
 public class JSONReader {
+    // class responsible for extracting world parameters from json file
+
+    // worlds' parameters
     private int width;
     private int height;
     private double jungleRatio;
@@ -19,6 +22,7 @@ public class JSONReader {
     private int initialNumberOfAnimals;
 
     public JSONReader(String path) {
+        // reading parameters
         try {
             Object object = new JSONParser().parse(new FileReader(path));
             JSONObject jsonObject = (JSONObject) object;
@@ -38,6 +42,7 @@ public class JSONReader {
         }
     }
 
+    // getters
     public int getWidth() {
         return this.width;
     }

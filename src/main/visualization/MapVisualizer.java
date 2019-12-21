@@ -13,12 +13,14 @@ import utilities.ImageLoader;
 import java.util.List;
 
 public class MapVisualizer {
+    // class responsible for visualising maps (one visualizer for one map)
     private WorldMap map;
     private ImageLoader imageLoader;
 
     private Canvas canvas;
 
     public MapVisualizer(WorldMap map, ImageLoader imageLoader, Canvas canvas) {
+        // passing necessary objects
         this.map = map;
         this.imageLoader = imageLoader;
 
@@ -26,6 +28,7 @@ public class MapVisualizer {
     }
 
     public void drawBackground() {
+        // drawing green background for the map
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
 
         gc.setFill(Color.DARKGREEN);
@@ -33,6 +36,7 @@ public class MapVisualizer {
     }
 
     public void drawObjects() {
+        // drawing all animals and grass on the map
         int width = map.getWidth();
         int height = map.getHeight();
 
@@ -51,6 +55,7 @@ public class MapVisualizer {
     }
 
     public void drawMarkedAnimals() {
+        // drawing animals which are marked because of having dominant gene
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
 
         List<Animal> animals = this.map.getDominantAnimals();
@@ -66,6 +71,7 @@ public class MapVisualizer {
     }
 
     public void drawFollowedAnimal(Animal followedAnimal) {
+        // drawing followed animal if such exists
         if (followedAnimal != null) {
             GraphicsContext gc = this.canvas.getGraphicsContext2D();
 
@@ -76,10 +82,12 @@ public class MapVisualizer {
     }
 
     private void drawObject(IMapElement object, int layoutX, int layoutY) {
+        // draw all animals (not marked) and grass
+
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
 
         if (object instanceof Animal) {
-            if (((Animal) object).hasHigherThanStartEenrgy())
+            if (((Animal) object).hasHigherThanStartEnergy())
                 gc.drawImage(this.imageLoader.getHighEnergyAnimal(), layoutX, layoutY);
             else if (((Animal) object).hasMinimumReproductionEnergy())
                 gc.drawImage(this.imageLoader.getMediumEnergyAnimal(), layoutX, layoutY );

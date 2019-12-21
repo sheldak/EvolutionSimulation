@@ -9,6 +9,7 @@ import mapElements.Grass;
 import java.util.Random;
 
 public class WorldBuilder {
+    // it builds world map by finding appropriate coordinates to place animals and grass
     private WorldMap map;
 
     private int mapWidth;
@@ -27,14 +28,14 @@ public class WorldBuilder {
         this.mapHeight = height;
     }
 
-    void placeJungle(double jungleRatio){
+    void placeJungle(double jungleRatio){ // initializing variables connected with size of the jungle
         this.jungleWidth = (int) ((double) this.mapWidth * jungleRatio);
         this.jungleHeight = (int) ((double) this.mapHeight * jungleRatio);
         this.jungleStart = new Vector2d(
                 (this.mapWidth - this.jungleWidth)/2, (this.mapHeight - this.jungleHeight)/2);
     }
 
-    void placeInitialAnimals(int number) {
+    void placeInitialAnimals(int number) { // finding space for animals added at the beginning of the world
         for (int i=0; i<number; i++) {
             int animalX = new Random().nextInt(this.mapWidth);
             int animalY = new Random().nextInt(this.mapHeight);
@@ -49,7 +50,7 @@ public class WorldBuilder {
 
                     break;
                 }
-                else {
+                else { // changing position by 1 until finding free place
                     animalX = (animalX + 1) % mapWidth;
 
                     if (animalX % mapWidth == 0) {
@@ -60,7 +61,7 @@ public class WorldBuilder {
         }
     }
 
-    Vector2d getBabyPosition(Vector2d parentsPosition) {
+    Vector2d getBabyPosition(Vector2d parentsPosition) { // looking for position for the new animal
         MapDirection babyPosition = MapDirection.getRandomDirection();
         for (int i=0; i<8; i++) {
             if (!this.map.isOccupied(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector())))) { // TODO correct destination to world builder
@@ -81,7 +82,7 @@ public class WorldBuilder {
                 this.map.addGrass(newGrass);
                 break;
             }
-            else{ // changing position by 1
+            else{ // changing position by 1 until finding free place
                 grassX = (grassX + 1 - this.jungleStart.getX()) % this.jungleWidth + this.jungleStart.getX();
 
                 if (grassX == this.jungleStart.getX())
@@ -91,7 +92,8 @@ public class WorldBuilder {
     }
 
     void placeGrassInSavannah() {
-        /*      areas and their names
+        /*       savannah is divided on 4 areas, there is equal probability for every place to get grass,
+                 for every grass position is randomized just once (then changed by 1 until finding free place)
                  *******************
                  *********D*********
                  *******************
@@ -105,6 +107,7 @@ public class WorldBuilder {
         int grassX;
         int grassY;
 
+        // every number represents one place in the savannah
         int positionFromBeginning = new Random().
                 nextInt(this.mapWidth * this.mapHeight - this.jungleWidth * this.jungleHeight);
 
@@ -132,13 +135,14 @@ public class WorldBuilder {
             grassY = this.jungleStart.getY() + this.jungleHeight + positionInAreaD / this.mapWidth;
         }
 
+        // when found place is occupied
         for (int i = 0; i < this.mapWidth * this.mapHeight - this.jungleWidth * this.jungleHeight; i++) {
-            if (!this.map.isOccupied(new Vector2d(grassX, grassY))){ // when there is other object on this place
+            if (!this.map.isOccupied(new Vector2d(grassX, grassY))){ // when there is no other object on this place
                 Grass newGrass = new Grass(grassX, grassY);
                 this.map.addGrass(newGrass);
                 break;
             }
-            else{ // changing position by 1
+            else{ // changing position by 1 until finding free place
                 grassX = (grassX + 1) % this.mapWidth;
 
                 if (grassX == 0)

@@ -2,16 +2,16 @@ package visualization;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import org.json.simple.JSONObject;
+
 import simulation.Simulation;
-import utilities.JSONWriter;
 import utilities.Statistics;
 
 public class MenuPanel extends VBox {
+    // menu panel between maps and all its functions
+
     private MenuState menuState;
     private LabelManager labelManager;
 
@@ -33,10 +33,12 @@ public class MenuPanel extends VBox {
     private Font labelFont = new Font("Arial", 13);
 
     public MenuPanel() {
-
+        // do not need to initialize anything when creating object
     }
 
     public void configureMenu() {
+        // making configurations of all menu elements
+
         this.configurePauseButton();
         this.configureDominantGenomeButton();
         this.configureFollowHistoryButton();
@@ -54,20 +56,24 @@ public class MenuPanel extends VBox {
     }
 
     public void passSimulationAndStatistics(Simulation simulation, Statistics statisticsA, Statistics statisticsB) {
+        // getting necessary objects
         this.simulation = simulation;
         this.statisticsA = statisticsA;
         this.statisticsB = statisticsB;
     }
 
     public void updateLabel() {
+        // updating label
         this.labelManager.updateLabel(this.menuState);
         this.label.setText(this.labelManager.getText());
     }
 
+    // getter
     public MenuState getMenuState() {
         return this.menuState;
     }
 
+    // configurations
     private void configurePauseButton() {
         this.pauseButton = new Button("Pause");
         this.pauseButton.setFont(this.bigFont);

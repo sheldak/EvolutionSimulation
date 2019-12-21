@@ -5,19 +5,15 @@ import map.WorldMap;
 import mapElements.Animal;
 
 public class MouseManager {
-    private WorldMap mapA;
-    private WorldMap mapB;
-
+    // class responsible for handling clicking at the animal
     private MenuPanel menuPanel;
 
-    public MouseManager(WorldMap mapA, WorldMap mapB, MenuPanel menuPanel) {
-        this.mapA = mapA;
-        this.mapB = mapB;
-
+    public MouseManager(MenuPanel menuPanel) {
         this.menuPanel = menuPanel;
     }
 
     public Animal getAnimalFromClick(double posX, double posY, WorldMap map) {
+        // returning clicked animal (that one with the most energy if more at the same position)
         if (menuPanel.getMenuState() == MenuState.FOLLOWING) {
             int xOnMap = (int) (posX / (400.0 / (double) map.getWidth()));
             int yOnMap = (int) ((400.0 - posY) / (400.0 / (double) map.getHeight())) + 1;

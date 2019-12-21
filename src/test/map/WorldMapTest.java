@@ -243,36 +243,6 @@ class WorldMapTest {
     }
 
     @Test
-    void testGetDominantGene() {
-        int[] genome1 = new int[32];
-        int[] genome2 = new int[32];
-
-        for(int i=0; i<32; i++) {
-            genome1[i] = 1;
-            genome2[i] = 2;
-        }
-
-        Animal animalA = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(genome1), 100);
-        Animal animalB = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(genome2), 100);
-        Animal animalC = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(genome2), 100);
-
-        map.startWorld(worldBuilder, 0.5, 0);
-        map.addAnimal(animalA);
-        map.addAnimal(animalB);
-        map.addAnimal(animalC);
-
-        assertEquals(2, map.getDominantGene());
-
-        Animal animalD = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(genome1), 100);
-        Animal animalE = new Animal(map, 1, 1, MapDirection.NORTH, new Genome(genome1), 100);
-
-        map.addAnimal(animalD);
-        map.addAnimal(animalE);
-
-        assertEquals(1, map.getDominantGene());
-    }
-
-    @Test
     void testGetAverageAnimalsEnergy() {
         int[] genomeArray = new int[32];
         for (int i=0; i<32; i++) genomeArray[i] = 0;

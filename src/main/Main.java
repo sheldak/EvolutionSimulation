@@ -24,20 +24,24 @@ public class Main extends Application{
         SimulationView simulationView = new SimulationView();
         Scene scene = new Scene(simulationView, 1100, 400);
 
+        // mouse management
         scene.addEventFilter(MouseEvent.MOUSE_PRESSED,
                 mouseEvent -> simulationView.handleClick(mouseEvent.getX(), mouseEvent.getY()));
 
         Simulation simulation = new Simulation(simulationView);
 
+        // different thread for calculations and visualization
         Thread thread = new Thread(() -> {
             Runnable runnable = simulation::simulate;
             while (true) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(30);
+                    // length of 1 day
+                    TimeUnit.MILLISECONDS.sleep(50);
                 } catch (InterruptedException ex) {
                     System.out.println("View thread sleep problem");
                 }
 
+                // if pause clicked
                 if (simulation.getSimulationActive()) {
                     Platform.runLater(runnable);
                 }

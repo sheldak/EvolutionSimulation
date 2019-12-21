@@ -9,6 +9,7 @@ import map.WorldMap;
 import java.util.*;
 
 public class Animal implements IMapElement {
+    // class containing animal features
     public static int moveEnergy;
     public static int startEnergy;
 
@@ -27,6 +28,7 @@ public class Animal implements IMapElement {
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(WorldMap map, int x, int y, MapDirection direction, Genome genome, int energy){
+        // setting initial variables
         this.map = map;
         this.position = new Vector2d(x, y);
         this.animalDirection = direction;
@@ -60,7 +62,7 @@ public class Animal implements IMapElement {
         }
     }
 
-    public Vector2d move(){
+    public Vector2d move() { // changing position depending on genome
         this.updateDirection();
         Vector2d destination = this.position.add(this.animalDirection.toUnitVector());
         destination = this.map.correctDestination(destination);
@@ -77,11 +79,13 @@ public class Animal implements IMapElement {
         this.energy += plantEnergy;
     }
 
-    public boolean hasHigherThanStartEenrgy() {
+    public boolean hasHigherThanStartEnergy() {
+        // color green on the map
         return this.energy >= Animal.startEnergy;
     }
 
-    public boolean hasMinimumReproductionEnergy() {
+    public boolean hasMinimumReproductionEnergy()
+    {   // color yellow on the map; red if the animal has less than startEnergy/2
         return this.energy >= Animal.startEnergy/2;
     }
 
@@ -119,6 +123,7 @@ public class Animal implements IMapElement {
         return this.energy <= 0;
     }
 
+    // getters
     public Vector2d getPosition(){
         return this.position;
     }
@@ -159,6 +164,7 @@ public class Animal implements IMapElement {
     }
 
     private void getOffspring(Set<Animal> offspring) {
+        // recursive function to find every offspring
         for (Animal child : this.children) {
             offspring.add(child);
             child.getOffspring(offspring);
@@ -170,7 +176,8 @@ public class Animal implements IMapElement {
             observer.changePosition(oldPosition, newPosition, this);
     }
 
-    private void updateDirection(){
+    private void updateDirection() {
+        // change in direction depends on genes
         int intDirection = this.genome.getRandomGene();
 
         this.animalDirection = this.animalDirection.change(intDirection);

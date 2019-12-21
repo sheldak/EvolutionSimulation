@@ -3,14 +3,15 @@ package features;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Genome { // TODO make one way of passing genome
+public class Genome {
+    // class containing animal's genome as an array of length 32 with genes: 0,1,2,3,4,5,6,7
     private int[] genome;
 
-    public Genome() {
+    public Genome() {   // default constructor used when first animals are being placed in the world
         this.setRandomGenome();
     }
 
-    public Genome(int[] genome) {
+    public Genome(int[] genome) { // used mostly for tests
         Arrays.sort(genome);
         this.genome = genome;
     }
@@ -43,13 +44,14 @@ public class Genome { // TODO make one way of passing genome
         this.genome = genome;
     }
 
-    public int getRandomGene() {
+    public int getRandomGene() {    // to get random direction of move depending on animal's genes
         int index = new Random().nextInt(32);
 
         return this.genome[index];
     }
 
-    public Genome crossingOver(Genome otherGenome, int divisionPointA ,int divisionPointB) {
+    public Genome crossingOver(Genome otherGenome, int divisionPointA, int divisionPointB) {
+        // creating new genome during reproduction
         int[] newGenome = new int[32];
         int[] genesOccurrence = new int[8];
         for (int i=0; i<8; i++) genesOccurrence[i] = 0;
@@ -81,7 +83,7 @@ public class Genome { // TODO make one way of passing genome
         return new Genome(newGenome);
     }
 
-    public Genome crossingOver(Genome otherGenome) {
+    public Genome crossingOver(Genome otherGenome) { // when we want randomized division points
         int divisionPointA = new Random().nextInt(30) + 1; // from 1 to 30
         int divisionPointB = new Random().nextInt(
                 31 - divisionPointA) + divisionPointA + 1; // from divisionPointA + 1 to 31
@@ -91,5 +93,5 @@ public class Genome { // TODO make one way of passing genome
 
     public int[] getArray() {
         return this.genome;
-    }
+    } // getting genome as an array
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Statistics {
+    // class having all statistics of map
     private WorldMap map;
 
     private String writingPath;
@@ -40,6 +41,7 @@ public class Statistics {
 
 
     public Statistics(WorldMap map, String writingPath) {
+        // initializing attributes
         this.map = map;
 
         this.writingPath = writingPath;
@@ -54,6 +56,7 @@ public class Statistics {
     }
 
     public void updateStatistics() {
+        // updating statistics "every day"
         this.currentDay = map.getCurrentDay();
 
         this.animals = this.map.getNumberOfAnimals();
@@ -68,6 +71,7 @@ public class Statistics {
     }
 
     public void changeFollowedAnimal(Animal animal) {
+        // if new animal is being followed (or no animal clicked)
         this.followedAnimal = animal;
 
         if (this.followedAnimal != null) {
@@ -87,6 +91,7 @@ public class Statistics {
     }
 
     public void setFollowingEndTime(String endTimeString) {
+        // setting time when following animal ends
         try {
             int endTime = Integer.parseInt(endTimeString);
             if (this.currentDay < endTime)
@@ -97,6 +102,7 @@ public class Statistics {
     }
 
     public void writeStatistics() {
+        // writing statistics to json file
         JSONWriter jsonWriter = new JSONWriter(this.writingPath);
         try {
             jsonWriter.writeToJSON(this.averageAnimalsAfterNDays, this.averageGrassesAfterNDays,
@@ -107,6 +113,7 @@ public class Statistics {
         }
     }
 
+    // getters
     public int getCurrentDay() {
         return this.currentDay;
     }
@@ -166,7 +173,9 @@ public class Statistics {
         return mostPopularGenome;
     }
 
+    // private methods
     private void updateAverageStatistics() {
+        // updating statistics of world which can be saved to json file
         int currDay = this.map.getCurrentDay();
 
         this.averageAnimalsAfterNDays = (this.averageAnimalsAfterNDays * (currDay - 1) + this.animals) / currDay;
@@ -190,6 +199,7 @@ public class Statistics {
     }
 
     private void updateFollowedAnimalStatistics() {
+        // updating information about followed animal
         if (this.followedAnimal != null && this.followingEndTime >= this.currentDay) {
             this.followedAnimalPosition = this.followedAnimal.getPosition();
 

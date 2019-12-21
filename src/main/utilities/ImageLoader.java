@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class ImageLoader {
+    // class responsible for loading all images
 
     private Image highEnergyAnimal;
     private Image mediumEnergyAnimal;
@@ -14,6 +15,7 @@ public class ImageLoader {
     private Image grassImage;
 
     public ImageLoader(int mapWidth, int mapHeight) {
+        // loading all images when the object is created
         try {
             this.loadImages(mapWidth, mapHeight);
         }
@@ -23,6 +25,7 @@ public class ImageLoader {
         }
     }
 
+    // getters
     public Image getHighEnergyAnimal() {
         return this.highEnergyAnimal;
     }
@@ -43,6 +46,7 @@ public class ImageLoader {
         return this.grassImage;
     }
 
+    // loading images
     private void loadImages(int mapWidth, int mapHeight) throws FileNotFoundException{
         int imageWidth = 400 / mapWidth;
         int imageHeight = 400 / mapHeight;
@@ -56,7 +60,9 @@ public class ImageLoader {
         this.lowEnergyAnimal = new Image(new FileInputStream("src/res/images/lowEnergyAnimal.png"),
                 imageWidth, imageHeight, false, false);
 
-        this.markedAnimalImage = new Image(new FileInputStream("src/res/images/markedAnimal.png"), imageWidth, imageHeight, false, false);
-        this.grassImage = new Image(new FileInputStream("src/res/images/grass.png"), imageWidth, imageHeight, false, false);
+        this.markedAnimalImage = new Image(new FileInputStream("src/res/images/markedAnimal.png"),
+                imageWidth, imageHeight, false, false);
+        this.grassImage = new Image(new FileInputStream("src/res/images/grass.png"),
+                imageWidth, imageHeight, false, false);
     }
 }

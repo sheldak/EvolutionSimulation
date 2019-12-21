@@ -3,6 +3,7 @@ package features;
 import java.util.Random;
 
 public enum MapDirection {
+    // animals have 8 possible directions to move
     NORTH,
     NORTHEAST,
     EAST,
@@ -12,7 +13,7 @@ public enum MapDirection {
     WEST,
     NORTHWEST;
 
-    public static MapDirection getRandomDirection(){
+    public static MapDirection getRandomDirection() { // for new animals
         int index = new Random().nextInt(8);
         return MapDirection.values()[index % MapDirection.values().length];
     }
@@ -40,11 +41,11 @@ public enum MapDirection {
         }
     }
 
-    public MapDirection change(int value) {
+    public MapDirection change(int value) { // changing direction clockwise (1 is 45 degrees)
         return MapDirection.values()[(this.ordinal() + value) % MapDirection.values().length];
     }
 
-    public Vector2d toUnitVector() {
+    public Vector2d toUnitVector() { // translating direction to vector
         switch(this){
             case NORTH:
                 return new Vector2d(0, 1);

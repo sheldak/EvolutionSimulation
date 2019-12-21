@@ -1,6 +1,7 @@
 package features;
 
 public class Vector2d {
+    // class containing position of elements at the map
     private final int x;
     private final int y;
 
@@ -19,45 +20,9 @@ public class Vector2d {
         hash += this.y * 17;
         return hash;
     }
-//
-//    public boolean equals(Vector2d other) {
-//        return this.hashCode() == other.hashCode();
-//    }
-
-    public boolean precedes(Vector2d other){
-        return (this.x <= other.x && this.y <= other.y);
-    }
-
-    public boolean follows(Vector2d other){
-        return (this.x >= other.x && this.y >= other.y);
-    }
-
-    public Vector2d upperRight(Vector2d other){
-        int up;
-        int right;
-
-        up = Math.max(this.y, other.y);
-        right = Math.max(this.x, other.x);
-
-        return new Vector2d(right, up);
-    }
-
-    public Vector2d lowerLeft(Vector2d other){
-        int down;
-        int left;
-
-        down = Math.min(this.y, other.y);
-        left = Math.min(this.x, other.x);
-
-        return new Vector2d(left, down);
-    }
 
     public Vector2d add(Vector2d other){
         return new Vector2d(this.x + other.x, this.y + other.y);
-    }
-
-    public Vector2d subtract(Vector2d other){
-        return new Vector2d(this.x - other.x, this.y - other.y);
     }
 
     public boolean equals(Object other){

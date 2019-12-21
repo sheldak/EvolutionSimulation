@@ -64,7 +64,7 @@ public class WorldBuilder {
     Vector2d getBabyPosition(Vector2d parentsPosition) { // looking for position for the new animal
         MapDirection babyPosition = MapDirection.getRandomDirection();
         for (int i=0; i<8; i++) {
-            if (!this.map.isOccupied(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector())))) { // TODO correct destination to world builder
+            if (!this.map.isOccupied(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector())))) {
                 return map.correctDestination(parentsPosition.add(babyPosition.toUnitVector()));
             }
             babyPosition.change(1);

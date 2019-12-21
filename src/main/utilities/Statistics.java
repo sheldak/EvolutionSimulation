@@ -162,7 +162,7 @@ public class Statistics {
         return this.followingEndTime;
     }
 
-    private Genome getDominantGenome(Map<Genome, Integer> dominantGenomeHistory) { // TODO the same method in WorldMap so maybe put it in Genome?
+    private Genome getDominantGenome(Map<Genome, Integer> dominantGenomeHistory) {
         Genome mostPopularGenome = null;
 
         for (Map.Entry<Genome, Integer> genomeEntry : dominantGenomeHistory.entrySet()) {

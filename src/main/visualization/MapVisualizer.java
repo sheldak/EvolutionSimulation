@@ -78,17 +78,13 @@ public class MapVisualizer {
     private void drawObject(IMapElement object, int layoutX, int layoutY) {
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
 
-        int energyBarOffset = (400 / this.map.getHeight()) * 7 / 10;
-
         if (object instanceof Animal) {
-            gc.drawImage(this.imageLoader.getAnimalImage(), layoutX, layoutY);
-
             if (((Animal) object).hasHigherThanStartEenrgy())
-                gc.drawImage(this.imageLoader.getHighEnergyBar(), layoutX, layoutY + energyBarOffset);
+                gc.drawImage(this.imageLoader.getHighEnergyAnimal(), layoutX, layoutY);
             else if (((Animal) object).hasMinimumReproductionEnergy())
-                gc.drawImage(this.imageLoader.getMediumEnergyBar(), layoutX, layoutY + energyBarOffset);
+                gc.drawImage(this.imageLoader.getMediumEnergyAnimal(), layoutX, layoutY );
             else
-                gc.drawImage(this.imageLoader.getLowEnergyBar(), layoutX, layoutY + energyBarOffset);
+                gc.drawImage(this.imageLoader.getLowEnergyAnimal(), layoutX, layoutY );
         }
 
         else if (object instanceof Grass)

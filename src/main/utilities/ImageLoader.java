@@ -7,12 +7,11 @@ import java.io.FileNotFoundException;
 
 public class ImageLoader {
 
-    private Image animalImage;
+    private Image highEnergyAnimal;
+    private Image mediumEnergyAnimal;
+    private Image lowEnergyAnimal;
     private Image markedAnimalImage;
     private Image grassImage;
-    private Image highEnergyBar;
-    private Image mediumEnergyBar;
-    private Image lowEnergyBar;
 
     public ImageLoader(int mapWidth, int mapHeight) {
         try {
@@ -24,8 +23,16 @@ public class ImageLoader {
         }
     }
 
-    public Image getAnimalImage() {
-        return this.animalImage;
+    public Image getHighEnergyAnimal() {
+        return this.highEnergyAnimal;
+    }
+
+    public Image getMediumEnergyAnimal() {
+        return this.mediumEnergyAnimal;
+    }
+
+    public Image getLowEnergyAnimal() {
+        return this.lowEnergyAnimal;
     }
 
     public Image getMarkedAnimalImage() {
@@ -36,35 +43,20 @@ public class ImageLoader {
         return this.grassImage;
     }
 
-    public Image getHighEnergyBar() {
-        return this.highEnergyBar;
-    }
-
-    public Image getMediumEnergyBar() {
-        return this.mediumEnergyBar;
-    }
-
-    public Image getLowEnergyBar() {
-        return this.lowEnergyBar;
-    }
-
     private void loadImages(int mapWidth, int mapHeight) throws FileNotFoundException{
-//        this.animalImage = new Image(new FileInputStream("src/res/images/animal.png"));
-//        this.grassImage = new Image(new FileInputStream("src/res/images/grass.png"));
-//
-//        this.highEnergyBar = new Image(new FileInputStream("src/res/images/highEnergyBar.png"));
-//        this.mediumEnergyBar = new Image(new FileInputStream("src/res/images/mediumEnergyBar.png"));
-//        this.lowEnergyBar = new Image(new FileInputStream("src/res/images/lowEnergyBar.png"));
-
         int imageWidth = 400 / mapWidth;
         int imageHeight = 400 / mapHeight;
 
-        this.animalImage = new Image(new FileInputStream("src/res/images/animal.png"), imageWidth, imageHeight, false, false);
+        this.highEnergyAnimal = new Image(new FileInputStream("src/res/images/highEnergyAnimal.png"),
+                imageWidth, imageHeight, false, false);
+
+        this.mediumEnergyAnimal = new Image(new FileInputStream("src/res/images/mediumEnergyAnimal.png"),
+                imageWidth, imageHeight, false, false);
+
+        this.lowEnergyAnimal = new Image(new FileInputStream("src/res/images/lowEnergyAnimal.png"),
+                imageWidth, imageHeight, false, false);
+
         this.markedAnimalImage = new Image(new FileInputStream("src/res/images/markedAnimal.png"), imageWidth, imageHeight, false, false);
         this.grassImage = new Image(new FileInputStream("src/res/images/grass.png"), imageWidth, imageHeight, false, false);
-
-        this.highEnergyBar = new Image(new FileInputStream("src/res/images/highEnergyBar.png"), imageWidth, imageHeight, false, false);
-        this.mediumEnergyBar = new Image(new FileInputStream("src/res/images/mediumEnergyBar.png"), imageWidth, imageHeight, false, false);
-        this.lowEnergyBar = new Image(new FileInputStream("src/res/images/lowEnergyBar.png"), imageWidth, imageHeight, false, false);
     }
 }

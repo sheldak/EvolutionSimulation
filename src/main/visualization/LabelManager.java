@@ -114,17 +114,30 @@ public class LabelManager {
             this.text = "Click on the animal to follow it";
         }
         else {
-            this.text = String.format("                       Following animal \n \n" +
+            StringBuilder genomeFirstLine = new StringBuilder();
+            StringBuilder genomeSecondLine = new StringBuilder();
+
+            int[] genomeArray = followedAnimal.getGenomeArray();
+
+            for (int i = 0; i < 16; i++) {
+                genomeFirstLine.append(genomeArray[i]).append(" ");
+                genomeSecondLine.append(genomeArray[i + 16]).append(" ");
+            }
+
+            this.text = String.format("                       Following animal \n" +
                             "Day       %d \n" +
                             "Following end at %d \n" +
                             "Position (x,y)   %d  %d  \n" +
                             "Children       %d \n" +
-                            "Offspring      %d \n",
+                            "Offspring      %d \n" +
+                            "Genome  %s \n" +
+                            "               %s \n",
                     usedStats.getCurrentDay(),
                     usedStats.getFollowingEndTime(),
                     usedStats.getFollowedAnimalPosition().getX(), usedStats.getFollowedAnimalPosition().getY(),
                     usedStats.getFollowedAnimalChildren(),
-                    usedStats.getFollowedAnimalOffspring());
+                    usedStats.getFollowedAnimalOffspring(),
+                    genomeFirstLine.toString(), genomeSecondLine.toString());
 
             if(!followedAnimal.isDead())
                 this.text += "Animal is alive";

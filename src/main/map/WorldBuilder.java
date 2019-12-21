@@ -63,11 +63,22 @@ public class WorldBuilder {
 
     Vector2d getBabyPosition(Vector2d parentsPosition) { // looking for position for the new animal
         MapDirection babyPosition = MapDirection.getRandomDirection();
+        // looking for not occupied place
         for (int i=0; i<8; i++) {
             if (!this.map.isOccupied(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector())))) {
                 return map.correctDestination(parentsPosition.add(babyPosition.toUnitVector()));
             }
             babyPosition.change(1);
+        }
+        // looking for place occupied by animal (not grass)
+        for (int i=0; i<8; i++) {
+            if (this.map.isOccupied(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector())))) {
+                if (this.map.objectsAt(map.correctDestination(parentsPosition.add(babyPosition.toUnitVector()))).
+                        toArray()[0] instanceof Animal)
+                    return map.correctDestination(parentsPosition.add(babyPosition.toUnitVector()));
+                else
+                    babyPosition.change(1);
+            }
         }
         return parentsPosition;
     }

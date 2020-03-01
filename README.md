@@ -9,3 +9,6 @@ Instruction:
 - Follow history: after clicking this button click on animal to follow it
 - Text field and submit: enter day on which following animal will stop and then submit 
 - Get statistics: writing statistics to json file (src/res/statistics)
+
+Recommendations: 
+- width and height of the world should be factors of number 400 
